@@ -25,14 +25,14 @@ def ghost_move(ghost_x, ghost_y):
     t_x = ghost_x;
     t_y = ghost_y;
     gridsize = [5, 5];
-    ghost_move = random.randint(1,4)
-    if (ghost_move == 1) and not (ghost_y - 1 == -1):
+    ghost_m = random.randint(1,4)
+    if (ghost_m == 1) and not (ghost_y - 1 == -1):
         t_y = ghost_y - 1;
-    elif (ghost_move == 2) and not (ghost_x + 1 == gridsize[0]):
+    elif (ghost_m == 2) and not (ghost_x + 1 == gridsize[0]):
         t_x = ghost_x + 1;
-    elif (ghost_move == 3) and not (ghost_y + 1 == gridsize[1]):
+    elif (ghost_m == 3) and not (ghost_y + 1 == gridsize[1]):
         t_y = ghost_y + 1;
-    elif (ghost_move == 4) and not (ghost_x - 1 == -1):
+    elif (ghost_m == 4) and not (ghost_x - 1 == -1):
         t_x = ghost_x - 1;
     else:
         t_x, t_y = ghost_move(ghost_x, ghost_y)

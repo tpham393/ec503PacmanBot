@@ -148,8 +148,6 @@ while not ended:
         pacman_x, pacman_y, ghost_x, ghost_y = pacman_x2, pacman_y2, ghost_x2, ghost_y2
         pacman[pacman_y][pacman_x]='True'
         ghost[ghost_y][ghost_x]='True'
-        print(ghost_x2)
-        print(ghost_y2)
     time.sleep(1)
     
 print(moves)
