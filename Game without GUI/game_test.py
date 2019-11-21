@@ -139,6 +139,7 @@ def turn_timer():
 turn_timer();
 
 while not ended:
+    time.sleep(1)
     move = ri(1,4);
     pacman_x2, pacman_y2, ghost_x2, ghost_y2, goal_x, goal_y, ended, won, moved = g.game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y)
     if moved:
@@ -148,7 +149,6 @@ while not ended:
         pacman_x, pacman_y, ghost_x, ghost_y = pacman_x2, pacman_y2, ghost_x2, ghost_y2
         pacman[pacman_y][pacman_x]='True'
         ghost[ghost_y][ghost_x]='True'
-    time.sleep(1)
     
 print(moves)
 
