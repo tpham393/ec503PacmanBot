@@ -27,13 +27,13 @@ def ghost_move(ghost_x, ghost_y):
     gridsize = [5, 5];
     ghost_move = random.randint(1,4)
     if (ghost_move == 1) and not (ghost_y - 1 == -1):
-        ghost_y = ghost_y - 1;
+        t_y = ghost_y - 1;
     elif (ghost_move == 2) and not (ghost_x + 1 == gridsize[0]):
-        ghost_x = ghost_x + 1;
+        t_x = ghost_x + 1;
     elif (ghost_move == 3) and not (ghost_y + 1 == gridsize[1]):
-        ghost_y = ghost_y + 1;
+        t_y = ghost_y + 1;
     elif (ghost_move == 4) and not (ghost_x - 1 == -1):
-        ghost_x = ghost_x - 1;
+        t_x = ghost_x - 1;
     else:
         t_x, t_y = ghost_move(ghost_x, ghost_y)
     
@@ -80,7 +80,7 @@ def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x
         t_x, t_y = ghost_move(ghost_x, ghost_y)
         moved = True;
         
-    if (ghost_x == pacman_x) and (ghost_y == pacman_y):
+    if (t_x == pacman_x) and (t_y == pacman_y):
         won = 'False'
         ended = True
     elif (goal_x == pacman_x) and (goal_y == pacman_y):
