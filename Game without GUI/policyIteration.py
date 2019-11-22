@@ -15,6 +15,8 @@ directions = 4;
 
 winReward = 1000;
 loseReward = -1000;
+gamma = 0.25;
+prob = 0.25;
 
 def state2coord(state):
     '''
@@ -135,46 +137,37 @@ def gameEnd(state):
         return True;
     return False;
 
-###############################################################################
 ########################## Policy evaluation ##################################
-###############################################################################
+def policyEvaluation(policy, v):
+    # Set parameters
+    deltaLim = 0.00001;
+    delta = 10000;
 
-# Set parameters
-gamma = 0.25;
-prob = 0.25;
-deltaLim = 0.00001;
-delta = 10000;
-# Initial V
-v = [0]*numStates;
-cnt = 0;
-while (delta > deltaLim): 
-    delta = 0;
-    for state in range(numStates):
-        if (gameEnd(state)): # game has ended
-            v[state] = 0;
-            continue;
-        vStateSum = 0;
-        vStateOld = v[state]; 
-        for action in range(4): 
+    cnt = 0;
+    while (delta > deltaLim): 
+        delta = 0;
+        for state in range(numStates):
+            if (gameEnd(state)): # game has ended
+                v[state] = 0;
+                continue;
+            vStateOld = v[state]; 
+            # Choose action from policy
+            action = policy[state];
             # Potential next states given current state and action
             nextStates, rewards = nextMove(state, action); 
             # Compute V(s)
             vNextStates = [prob*(rewards[i]+gamma*v[nextStates[i]]) for i in range(len(nextStates))];
-            vStateSum += sum(vNextStates);
-        v[state] = vStateSum;
+            v[state] = sum(vNextStates);
 
-        delta = max(delta, abs(v[state]-vStateOld));
-    print("Delta",delta);
-    cnt += 1;
-print("V converted at", cnt);
+            delta = max(delta, abs(v[state]-vStateOld));
+        print("Delta",delta);
+        cnt += 1;
+    print("Policy evalulation converged at", cnt);
+    return v;
 
 
-###############################################################################
 ########################## Policy Improvement #################################
-###############################################################################
-
-policy = [0]*numStates;
-for i in range(3000):
+def policyImprovement(policy, v):
     policyStable = True;
     for state in range(numStates):
         if (gameEnd(state)): # game ended
@@ -194,13 +187,27 @@ for i in range(3000):
             if (actionVal > optActionVal): # Choose action with largest V(s,a)
                 optActionVal = actionVal;
                 optAction = action;
-        # Continue if no convergence
+        # No convergence
         if (oldAction != optAction):
             policyStable = False;
             policy[state] = optAction;
-    if (policyStable == True): # Converged
-        print("Policy converged at",i);
-        break;
+    return policy, policyStable
+
+###############################################################################
+############################  Policy Iteration ################################
+###############################################################################
+# Init
+v = [0]*numStates;
+policy = [0]*numStates;
+policyStable = False;
+
+# Run Policy Iteration
+policyIter = 1;
+while (not policyStable):
+    v = policyEvaluation(policy, v);
+    policy, policyStable = policyImprovement(policy, v);
+    print("Total iterations:", policyIter)
+    policyIter += 1;
 
 ###############################################################################
 ############################  Game Simulation #################################
@@ -223,7 +230,7 @@ game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
 ## Start game
 while not game.ended:
     game.update(); # update graphics
-    time.sleep(1)
+    time.sleep(1.3);
     # Get state (0 to numStates-1) from pacman and ghost coordinates
     state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y);
 
