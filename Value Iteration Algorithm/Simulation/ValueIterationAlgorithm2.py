@@ -33,9 +33,9 @@ LEFT = 3
 Enumerate states for a 3x3 grid ==> 81 states 
 (9 choices for pacman location x 9 choices for ghost location)
 
-^    _6_|_7_|_8_
+^    _0_|_1_|_2_
 |    _3_|_4_|_5_
-y     0 | 1 | 2
+y     6 | 7 | 8
     x -->
 
 Each x,y pair represented as an integer number corresponding to the diagram above
@@ -63,7 +63,7 @@ class PacmanEnv:
         P[s][a] is a list of is a list of transition tuples (prob, next_state, reward, done)
         num_states = number of states (set to default for 3x3 grid)
         num_actions = number of actions (set to 4)
-        pellet_loc = location of pellet (set to 8, i.e. [2,2] by default)
+        pellet_loc = location of pellet (set to 2, i.e. [2,0] by default)
 
     Methods:
         return_state: Returns state number given location of pacman and the ghost
@@ -76,7 +76,7 @@ class PacmanEnv:
                     If number out of range, returns 'invalid entry' error message
     '''
 
-    def __init__(self, states=states_num, num_states=81, num_actions=4, pellet_loc=8):
+    def __init__(self, states=states_num, num_states=81, num_actions=4, pellet_loc=2):
         self.states = states
         self.num_states = num_states
         self.num_actions = num_actions
@@ -87,22 +87,22 @@ class PacmanEnv:
         def grid_to_xy(number):
             switch = {
                 0: [0,0],
-                1: [0,1],
-                2: [0,2],
-                3: [1,0],
+                1: [1,0],
+                2: [2,0],
+                3: [0,1],
                 4: [1,1],
-                5: [1,2],
-                6: [2,0],
-                7: [2,1],
+                5: [2,1],
+                6: [0,2],
+                7: [1,2],
                 8: [2,2]
             }
             return switch.get(number, "invalid entry")
         
         def xy_to_grid(x,y):
             switch = {
-                0: {0:0, 1:1, 2:2},
-                1: {0:3, 1:4, 2:5},
-                2: {0:6, 1:7, 2:8}
+                0: {0:0, 1:3, 2:6},
+                1: {0:1, 1:4, 2:7},
+                2: {0:2, 1:5, 2:8}
             }
             x = switch.get(x,"invalid entry")
 
@@ -114,16 +114,16 @@ class PacmanEnv:
         def return_state(p, g):
             return states.index( (p,g) )
         
-        def move(row, col, action):
+        def move(x, y, action):
             if action == UP:
-                row = min(2, row+1)
+                y = max(0, y-1)
             elif action == RIGHT:
-                col = min(2, col+1)
+                x = min(2, x+1)
             elif action == DOWN:
-                row = max(0, row-1)
+                y = min(2, y+1)
             elif action == LEFT:
-                col = max(0, col-1)
-            return xy_to_grid(row, col)
+                x = max(0, x-1)
+            return xy_to_grid(x, y)
         
         # parameters must be of the same type, i.e. [x,y] or int value 0-8
         # need to adjust to include reward definition for bumping into walls
@@ -234,56 +234,6 @@ def value_iteration(env=PacmanEnv(), gamma=0.5, theta=1e-5):
     
     return policy, V, steps
 
-
-# In[21]:
-
-
-def grid_to_xy(number):
-    switch = {
-        0: [0,0],
-        1: [0,1],
-        2: [0,2],
-        3: [1,0],
-        4: [1,1],
-        5: [1,2],
-        6: [2,0],
-        7: [2,1],
-        8: [2,2]
-    }
-    return switch.get(number, "invalid entry")
-
-def convert_to_action(num):
-    switch = {
-                0: 'UP',
-                1: 'RIGHT',
-                2: 'DOWN',
-                3: 'LEFT'
-            }
-    return switch.get(num, "invalid entry")
-
-policy, V, steps = value_iteration()
-env = PacmanEnv()
-
-print('-----------------------------------------')
-print('Optimal extracted policy: ')
-print(policy)
-
-print('-----------------------------------------')
-for s in range(env.num_states):
-    print()
-    print('Location of Pacman: ', grid_to_xy(env.states[s][0]))
-    print('Location of Ghost: ', grid_to_xy(env.states[s][1]))
-    print('Best action determined by optimal policy: ', convert_to_action( policy[s].tolist().index(1)) )
-
-print('-----------------------------------------')    
-print('Value Function: ')
-print(V)
-
-print('Steps \'til convergence: ', steps)
-print('-----------------------------------------')
-
-
-# In[ ]:
 
 
 
