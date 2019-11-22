@@ -6,11 +6,11 @@ from random import randint as ri
 import threading
 
 class Game():
-    def __init__(self):
+    def __init__(self,gridX,gridY):
         pass
         pygame.init()
         pygame.font.init()
-        self.gridsize = [3,3];
+        self.gridsize = [gridX,gridY];
         width, height = 65*self.gridsize[0], 65*self.gridsize[1]+74
         self.screen = pygame.display.set_mode((width,height))
         pygame.display.set_caption("Game")

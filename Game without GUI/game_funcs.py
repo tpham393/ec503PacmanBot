@@ -21,10 +21,10 @@ import math
 import random
 import time
 
-def ghost_move(ghost_x, ghost_y):
+def ghost_move(ghost_x, ghost_y, gridsize):
     t_x = ghost_x;
     t_y = ghost_y;
-    gridsize = [3, 3];
+    #gridsize = [3, 3];
     ghost_m = random.randint(1,4)
     if (ghost_m == 1) and not (ghost_y - 1 == -1):
         t_y = ghost_y - 1;
@@ -35,14 +35,14 @@ def ghost_move(ghost_x, ghost_y):
     elif (ghost_m == 4) and not (ghost_x - 1 == -1):
         t_x = ghost_x - 1;
     else:
-        t_x, t_y = ghost_move(ghost_x, ghost_y)
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
     
     return t_x, t_y
 
-def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x = 3, goal_y = 1):
+def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x = 3, goal_y = 1, gridX = 3, gridY = 3):
     t_x = ghost_x;
     t_y = ghost_y;
-    gridsize = [3, 3];
+    gridsize = [gridX, gridY];
     pacman = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
     ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
     goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
@@ -59,25 +59,25 @@ def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x
         pacman[pacman_y][pacman_x]='False'
         pacman_y = pacman_y - 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y)
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
     elif  (move == 2) and not (pacman_x + 1 == gridsize[0]):
         pacman[pacman_y][pacman_x]='False'
         pacman_x = pacman_x + 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y)
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
     elif  (move == 3) and not (pacman_y + 1 == gridsize[1]):
         pacman[pacman_y][pacman_x]='False'
         pacman_y = pacman_y + 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y)
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
     elif  (move == 4) and not (pacman_x - 1 == -1):
         pacman[pacman_y][pacman_x]='False'
         pacman_x = pacman_x - 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y)
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
         
     if (t_x == pacman_x) and (t_y == pacman_y):
