@@ -210,8 +210,8 @@ while (pacman_x==game.goal_x and pacman_y==game.goal_y):
 
 ghost_x, ghost_y = 2,0;
 while (ghost_x==game.goal_x and ghost_y==game.goal_y) or (ghost_x==pacman_x and ghost_y==pacman_y):
-    ghost_x = ri(0,2);
-    ghost_y = ri(0,2);
+    ghost_x = ri(0,col-1);
+    ghost_y = ri(0,row-1);
 
 game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
 '''
@@ -233,8 +233,7 @@ while not game.ended:
 
     # Get game status given current state and move (action)
     pacman_x2, pacman_y2, ghost_x2, ghost_y2, game.goal_x, game.goal_y, game.ended, game.won, game.moved = g.game_func(move, game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, game.goal_x,game.goal_y,col,row);
-    if game.moved: # if moved, update grid
-        game.moves.append(move);
-        game.updateState(pacman_x2, pacman_y2, ghost_x2, ghost_y2); # update internal grid
+    game.moves.append(move);
+    game.updateState(pacman_x2, pacman_y2, ghost_x2, ghost_y2); # update internal grid
 # Update one last time before game end
 game.update(); 

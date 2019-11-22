@@ -79,6 +79,9 @@ def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x
         pacman[pacman_y][pacman_x]='True'
         t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
+    else:
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
+
         
     if (t_x == pacman_x) and (t_y == pacman_y):
         won = 'False'

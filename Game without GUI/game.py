@@ -106,7 +106,7 @@ class Game():
         self.drawBoard()
         self.drawHUD()
         pygame.display.flip()
-        time.sleep(2)
+        time.sleep(1)
         exit()
         while True:
             for event in pygame.event.get():
