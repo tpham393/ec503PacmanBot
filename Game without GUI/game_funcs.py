@@ -55,33 +55,38 @@ def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x
     ended=False
     moved = False;
     
+    t_x = ghost_x;
+    t_y = ghost_y;
     if (move == 1) and not (pacman_y - 1 == -1):
         pacman[pacman_y][pacman_x]='False'
         pacman_y = pacman_y - 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
+        if (pacman_x != ghost_x or pacman_y != ghost_y):
+            t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
     elif  (move == 2) and not (pacman_x + 1 == gridsize[0]):
         pacman[pacman_y][pacman_x]='False'
         pacman_x = pacman_x + 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
+        if (pacman_x != ghost_x or pacman_y != ghost_y):
+            t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
     elif  (move == 3) and not (pacman_y + 1 == gridsize[1]):
         pacman[pacman_y][pacman_x]='False'
         pacman_y = pacman_y + 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
+        if (pacman_x != ghost_x or pacman_y != ghost_y):
+            t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
     elif  (move == 4) and not (pacman_x - 1 == -1):
         pacman[pacman_y][pacman_x]='False'
         pacman_x = pacman_x - 1;
         pacman[pacman_y][pacman_x]='True'
-        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
+        if (pacman_x != ghost_x or pacman_y != ghost_y):
+            t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
         moved = True;
-    else:
+    else: # ghost move even if pacman can't move
         t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize)
-
         
     if (t_x == pacman_x) and (t_y == pacman_y):
         won = 'False'

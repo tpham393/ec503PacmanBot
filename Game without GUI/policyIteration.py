@@ -2,7 +2,6 @@ import game_funcs as g
 from game import Game
 import time
 from random import randint as ri
-import threading
 import math
 
 # Initial game parameters
@@ -14,6 +13,8 @@ gridSize = row*col;
 numStates = gridSize*gridSize;
 directions = 4;
 
+winReward = 1000;
+loseReward = -1000;
 
 def state2coord(state):
     '''
@@ -101,7 +102,9 @@ def nextMove(currState, action):
     pacmanLocX_next, pacmanLocY_next = evalAction(pacmanLocX, pacmanLocY, action);
     # Initialize rewards
     if (pacmanLocX_next == pelletLocX) and (pacmanLocY_next == pelletLocY): 
-        rewards = [100]*4;
+        rewards = [winReward]*4;
+    elif (pacmanLocX_next == ghostLocX) and (pacmanLocY_next == ghostLocY):
+        rewards = [loseReward]*4;
     else:
         rewards = [0]*4;
 
@@ -112,7 +115,7 @@ def nextMove(currState, action):
         nextStates.append(state);     
         # Evaluate reward - pacman eaten by ghost
         if (pacmanLocX_next == ghostLocX_next) and (pacmanLocY_next == ghostLocY_next):
-            rewards[ghostAction] = -100;
+            rewards[ghostAction] = loseReward;
 
     return nextStates, rewards;
 
@@ -139,10 +142,11 @@ def gameEnd(state):
 # Set parameters
 gamma = 0.25;
 prob = 0.25;
-deltaLim = 1;
+deltaLim = 0.00001;
 delta = 10000;
 # Initial V
 v = [0]*numStates;
+cnt = 0;
 while (delta > deltaLim): 
     delta = 0;
     for state in range(numStates):
@@ -161,6 +165,8 @@ while (delta > deltaLim):
 
         delta = max(delta, abs(v[state]-vStateOld));
     print("Delta",delta);
+    cnt += 1;
+print("V converted at", cnt);
 
 
 ###############################################################################
@@ -201,7 +207,6 @@ for i in range(3000):
 ###############################################################################
 game = Game(col,row);
 
-'''
 ## Random spawn
 pacman_x, pacman_y = 2,0;
 while (pacman_x==game.goal_x and pacman_y==game.goal_y):
@@ -214,7 +219,6 @@ while (ghost_x==game.goal_x and ghost_y==game.goal_y) or (ghost_x==pacman_x and 
     ghost_y = ri(0,row-1);
 
 game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
-'''
 
 ## Start game
 while not game.ended:
