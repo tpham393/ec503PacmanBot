@@ -9,11 +9,11 @@ import game_funcs as g
 from random import randint as ri
 import threading
 
-pacman_x, pacman_y = 1, 3;
-ghost_x, ghost_y = 3, 3;
-goal_x, goal_y = 3, 1;
+pacman_x, pacman_y = 1, 2;
+ghost_x, ghost_y = 2, 2;
+goal_x, goal_y = 2, 1;
 moves = [];
-gridsize = [5, 5];
+gridsize = [3, 3];
 pacman = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
@@ -132,13 +132,14 @@ class Game():
         
 tg = Game()
 
-def turn_timer():
-    tg.update()
-    threading.Timer(0.1, turn_timer).start()
+#def turn_timer():
+#    tg.update()
+#    threading.Timer(0.1, turn_timer).start()
 
-turn_timer();
+#turn_timer();
 
 while not ended:
+    tg.update();
     time.sleep(1)
     move = ri(1,4);
     pacman_x2, pacman_y2, ghost_x2, ghost_y2, goal_x, goal_y, ended, won, moved = g.game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y)
