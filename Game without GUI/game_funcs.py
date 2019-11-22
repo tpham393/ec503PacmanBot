@@ -24,7 +24,7 @@ import time
 def ghost_move(ghost_x, ghost_y):
     t_x = ghost_x;
     t_y = ghost_y;
-    gridsize = [5, 5];
+    gridsize = [3, 3];
     ghost_m = random.randint(1,4)
     if (ghost_m == 1) and not (ghost_y - 1 == -1):
         t_y = ghost_y - 1;
@@ -42,7 +42,7 @@ def ghost_move(ghost_x, ghost_y):
 def game_func(move, pacman_x = 1, pacman_y = 3, ghost_x = 3, ghost_y = 3, goal_x = 3, goal_y = 1):
     t_x = ghost_x;
     t_y = ghost_y;
-    gridsize = [5, 5];
+    gridsize = [3, 3];
     pacman = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
     ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
     goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]

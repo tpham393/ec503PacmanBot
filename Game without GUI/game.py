@@ -1,0 +1,116 @@
+import pygame
+import math
+import random
+import time
+from random import randint as ri
+import threading
+
+class Game():
+    def __init__(self):
+        pass
+        pygame.init()
+        pygame.font.init()
+        self.gridsize = [3,3];
+        width, height = 65*self.gridsize[0], 65*self.gridsize[1]+74
+        self.screen = pygame.display.set_mode((width,height))
+        pygame.display.set_caption("Game")
+        self.pacman_x, self.pacman_y = 0, 2;
+        self.ghost_x, self.ghost_y = 2, 2;
+        self.goal_x, self.goal_y = 2, 0;
+        self.moves = [];
+        self.pacman = [['False' for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
+        self.ghost = [['False' for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
+        self.goal = [['False' for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
+        self.pacman[self.pacman_y][self.pacman_x] = 'True';
+        self.ghost[self.ghost_y][self.ghost_x] = 'True';
+        self.goal[self.goal_y][self.goal_x] = 'True';
+        self.won = 'False'
+        self.lost = 'False'
+        self.turn_count=-1
+        self.ended = False
+
+        self.clock = pygame.time.Clock()
+        self.initGraphics()
+        
+    def updateState(self, pacman_x, pacman_y, ghost_x, ghost_y):
+        self.pacman[self.pacman_y][self.pacman_x]='False'
+        self.ghost[self.ghost_y][self.ghost_x]='False'
+
+        self.pacman_x = pacman_x;
+        self.pacman_y = pacman_y;
+        self.ghost_x = ghost_x;
+        self.ghost_y = ghost_y;
+        
+        self.pacman[self.pacman_y][self.pacman_x]='True'
+        self.ghost[self.ghost_y][self.ghost_x]='True'
+
+    def initGraphics(self):
+        self.linev=pygame.image.load("Graphics/line.png")
+        self.lineh=pygame.transform.rotate(pygame.image.load("Graphics/line.png"), -90)
+        self.score=pygame.image.load("Graphics/score.png")
+        self.p=pygame.image.load("Graphics/p.png")
+        self.g=pygame.image.load("Graphics/g.png")
+        self.w=pygame.image.load("Graphics/w.png")
+        
+    def drawBoard(self):
+        for x in range(self.gridsize[0]):
+            for y in range(self.gridsize[1]-1):
+                self.screen.blit(self.lineh, [x*64+5, (y+1)*64])
+        
+        for y in range(self.gridsize[1]):
+            for x in range(self.gridsize[0]-1):
+                self.screen.blit(self.linev, [(x+1)*64, (y)*64+5])
+        
+        for x in range(self.gridsize[0]):
+            for y in range(self.gridsize[1]):
+                if self.ghost[y][x] == 'True':
+                    self.screen.blit(self.g, [(x)*64+5, (y)*64+5])
+                elif self.pacman[y][x] == 'True':
+                    self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
+                elif self.goal[y][x] == 'True':
+                    self.screen.blit(self.w, [(x)*64+5, (y)*64+5])
+        
+    def drawHUD(self):
+        if not self.ended:
+            self.screen.blit(self.score,[0, 65*self.gridsize[1]])
+            myfont = pygame.font.SysFont(None, 32)
+            label1 = myfont.render("1: Up, 2: Right", 1, (255,255,255))
+            label2 = myfont.render("3: Down, 4: Left", 1, (255,255,255))
+        else:
+            self.screen.blit(self.score,[0, 65*self.gridsize[1]])
+            myfont = pygame.font.SysFont(None, 32)
+            label2 = myfont.render("", 1, (255,255,255))
+            if self.won == 'False':
+                label1 = myfont.render("You've been eaten!", 1, (255,255,255))
+            else: 
+                label1 = myfont.render("You've won!", 1, (255,255,255))
+        self.screen.blit(label1,(5,65*self.gridsize[1] + 10))
+        self.screen.blit(label2,(5,65*self.gridsize[1] + 40))
+        
+    def update(self):
+        #if not self.ended:
+        self.clock.tick(60)
+        self.screen.fill(0)
+        self.drawBoard()
+        self.drawHUD()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
+            key=pygame.key.get_pressed()               
+        pygame.display.flip()
+        if self.ended:
+            self.end()
+     
+    def end(self):
+        self.screen.fill(0)
+        self.drawBoard()
+        self.drawHUD()
+        pygame.display.flip()
+        time.sleep(2)
+        exit()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+            pygame.display.flip()
+        
