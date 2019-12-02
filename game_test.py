@@ -9,11 +9,19 @@ import game_funcs as g
 from random import randint as ri
 import threading
 
-pacman_x, pacman_y = 1, 2;
-ghost_x, ghost_y = 2, 2;
-goal_x, goal_y = 2, 1;
+gridsize = [7, 7];
+grid = [['True', 'True', 'True', 'True', 'True', 'True', 'True'], 
+        ['True', 'False', 'False', 'False', 'False', 'False', 'True'],
+        ['True', 'False', 'True', 'False', 'True', 'False', 'True'],
+        ['True', 'False', 'False', 'False', 'False', 'False', 'True'],
+        ['True', 'False', 'True', 'True', 'True', 'False', 'True'],
+        ['True', 'False', 'False', 'False', 'False', 'False', 'True'],
+        ['True', 'True', 'True', 'True', 'True', 'True', 'True']];
+
+pacman_x, pacman_y = 1, 5;
+ghost_x, ghost_y = 1, 1;
+goal_x, goal_y = 5, 1;
 moves = [];
-gridsize = [3, 3];
 pacman = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
@@ -57,6 +65,7 @@ class Game():
         self.p=pygame.image.load("Graphics/p.png")
         self.g=pygame.image.load("Graphics/g.png")
         self.w=pygame.image.load("Graphics/w.png")
+        self.wall=pygame.image.load("Graphics/wall.png")
         
     def drawBoard(self):
         for x in range(gridsize[0]):
@@ -75,6 +84,8 @@ class Game():
                     self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
                 elif goal[y][x] == 'True':
                     self.screen.blit(self.w, [(x)*64+5, (y)*64+5])
+                elif grid[y][x] == 'True':
+                    self.screen.blit(self.wall, [(x)*64+5, (y)*64+5])
         
     def drawHUD(self):
         global won
@@ -144,7 +155,7 @@ while not ended:
     # There are still minor bugs though with this but I haven't figure out what's happening yet.
     time.sleep(1)
     move = ri(1,4);
-    pacman_x2, pacman_y2, ghost_x2, ghost_y2, goal_x, goal_y, ended, won, moved = g.game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y)
+    pacman_x2, pacman_y2, ghost_x2, ghost_y2, goal_x, goal_y, ended, won, moved = g.game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, gridsize, grid)
     if moved:
         moves.append(move)
         pacman[pacman_y][pacman_x]='False'
