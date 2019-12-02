@@ -70,7 +70,7 @@ def ghost_move2(pacman_x, pacman_y, ghost_x, ghost_y, gridsize):
     elif (ghost_m == 4) and not (ghost_x - 1 == -1):
         t_x = ghost_x - 1;
     else:
-        t_x, t_y = ghost_move(pacman_x, pacman_y, ghost_x, ghost_y, gridsize)
+        t_x, t_y = ghost_move2(pacman_x, pacman_y, ghost_x, ghost_y, gridsize)
     
     return t_x, t_y
 
