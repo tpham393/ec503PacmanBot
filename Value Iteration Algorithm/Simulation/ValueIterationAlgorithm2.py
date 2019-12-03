@@ -214,7 +214,7 @@ def value_iteration(env=PacmanEnv(), gamma=0.5, theta=1e-5):
     steps = 0
     
     # iteratively calculate optimal V
-    while ~converged:
+    while not converged:
         print('Value iteration, step ', steps, '...')
         delta = 0
         for s in range(env.num_states):
