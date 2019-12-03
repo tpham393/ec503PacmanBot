@@ -136,9 +136,9 @@ class Game():
 					pacman[pacman_y][pacman_x]='True'
 					temp = True;
 					for i in range(len(ghost_x)):
-						if (pacman_x != ghost_x[i] and pacman_y != ghost_y[i]):
+						if (pacman_x == ghost_x[i] and pacman_y == ghost_y[i]):
 							temp = False;
-					if not temp:
+					if temp:
 						self.ghost_move()
 					self.win_check()
 				elif  key[pygame.K_2] and not (grid[pacman_y][pacman_x + 1] == 'True'):
@@ -147,9 +147,9 @@ class Game():
 					pacman[pacman_y][pacman_x]='True'
 					temp = True;
 					for i in range(len(ghost_x)):
-						if (pacman_x != ghost_x[i] and pacman_y != ghost_y[i]):
+						if (pacman_x == ghost_x[i] and pacman_y == ghost_y[i]):
 							temp = False;
-					if not temp:
+					if temp:
 						self.ghost_move()
 					self.win_check()
 				elif  key[pygame.K_3] and not (grid[pacman_y + 1][pacman_x] == 'True'):
@@ -158,9 +158,9 @@ class Game():
 					pacman[pacman_y][pacman_x]='True'
 					temp = True;
 					for i in range(len(ghost_x)):
-						if (pacman_x != ghost_x[i] and pacman_y != ghost_y[i]):
+						if (pacman_x == ghost_x[i] and pacman_y == ghost_y[i]):
 							temp = False;
-					if not temp:
+					if temp:
 						self.ghost_move()
 					self.win_check()
 				elif  key[pygame.K_4] and not (grid[pacman_y][pacman_x - 1] == 'True'):
@@ -169,9 +169,9 @@ class Game():
 					pacman[pacman_y][pacman_x]='True'
 					temp = True;
 					for i in range(len(ghost_x)):
-						if (pacman_x != ghost_x[i] and pacman_y != ghost_y[i]):
+						if (pacman_x == ghost_x[i] and pacman_y == ghost_y[i]):
 							temp = False;
-					if not temp:
+					if temp:
 						self.ghost_move()
 					self.win_check()
 				# else: # ghost move even if pacman can't move
