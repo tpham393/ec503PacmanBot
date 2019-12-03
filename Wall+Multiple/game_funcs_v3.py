@@ -26,7 +26,7 @@ def validGhostMove(x, y, ghost_x, ghost_y, grid):
 	Given new ghost location and locations of the other ghosts, see if new location is valid.
 	'''
 	# Check if ghost move is into a wall or not
-	if (grid[y][x] == 'True'): 
+	if (grid[y][x] == True): 
 		return False;
 	# Check if new ghost position overlaps with other ghost positions
 	for i in range(len(ghost_x)):
@@ -155,13 +155,13 @@ def game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, grid, 
 	ended = False
 	prevPacman_x, prevPacman_y = pacman_x, pacman_y;
 	# Pacman move
-	if (move == 1) and not (grid[pacman_y - 1][pacman_x] == 'True'):
+	if (move == 1) and not (grid[pacman_y - 1][pacman_x] == True):
 		pacman_y = pacman_y - 1;
-	elif  (move == 2) and not (grid[pacman_y][pacman_x + 1] == 'True'):
+	elif  (move == 2) and not (grid[pacman_y][pacman_x + 1] == True):
 		pacman_x = pacman_x + 1;
-	elif  (move == 3) and not (grid[pacman_y + 1][pacman_x] == 'True'):
+	elif  (move == 3) and not (grid[pacman_y + 1][pacman_x] == True):
 		pacman_y = pacman_y + 1;
-	elif  (move == 4) and not (grid[pacman_y][pacman_x - 1] == 'True'):
+	elif  (move == 4) and not (grid[pacman_y][pacman_x - 1] == True):
 		pacman_x = pacman_x - 1;
 
 	# Move ghost if pacman was not eaten by pacman move

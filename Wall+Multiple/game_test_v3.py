@@ -10,13 +10,13 @@ from random import randint as ri
 import threading
 
 gridsize = [7, 7];
-grid = [['True', 'True', 'True', 'True', 'True', 'True', 'True'], 
-		['True', 'False', 'False', 'False', 'False', 'False', 'True'],
-		['True', 'False', 'True', 'False', 'True', 'False', 'True'],
-		['True', 'False', 'False', 'False', 'False', 'False', 'True'],
-		['True', 'False', 'True', 'True', 'True', 'False', 'True'],
-		['True', 'False', 'False', 'False', 'False', 'False', 'True'],
-		['True', 'True', 'True', 'True', 'True', 'True', 'True']];
+grid = [[True, True, True, True, True, True, True], 
+		[True, False, False, False, False, False, True],
+		[True, False, True, False, True, False, True],
+		[True, False, False, False, False, False, True],
+		[True, False, True, True, True, False, True],
+		[True, False, False, False, False, False, True],
+		[True, True, True, True, True, True, True]];
 
 pacman_x, pacman_y = 1, 5;
 ghost_x, ghost_y = [1, 1], [2, 1];
@@ -24,15 +24,15 @@ ghost_type = ['Random', 'Chase'];
 numGhosts = 2;
 goal_x, goal_y = 5, 1;
 moves = [];
-pacman = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
-ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
-goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
-pacman[pacman_y][pacman_x] = 'True';
+pacman = [[False for x in range(gridsize[0])] for y in range(gridsize[1])]
+ghost  = [[False for x in range(gridsize[0])] for y in range(gridsize[1])]
+goal = [[False for x in range(gridsize[0])] for y in range(gridsize[1])]
+pacman[pacman_y][pacman_x] = True;
 for i in range(numGhosts):
-	ghost[ghost_y[i]][ghost_x[i]]='True'
-goal[goal_y][goal_x] = 'True';
-won = 'False'
-lost = 'False'
+	ghost[ghost_y[i]][ghost_x[i]]=True
+goal[goal_y][goal_x] = True;
+won = False
+lost = False
 turn_count=-1
 ended=False
 
@@ -81,13 +81,13 @@ class Game():
 		
 		for x in range(gridsize[0]):
 			for y in range(gridsize[1]):
-				if ghost[y][x] == 'True':
+				if ghost[y][x] == True:
 					self.screen.blit(self.g, [(x)*64+5, (y)*64+5])
-				elif pacman[y][x] == 'True':
+				elif pacman[y][x] == True:
 					self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
-				elif goal[y][x] == 'True':
+				elif goal[y][x] == True:
 					self.screen.blit(self.w, [(x)*64+5, (y)*64+5])
-				elif grid[y][x] == 'True':
+				elif grid[y][x] == True:
 					self.screen.blit(self.wall, [(x)*64+5, (y)*64+5])
 		
 	def drawHUD(self):
@@ -101,7 +101,7 @@ class Game():
 			self.screen.blit(self.score,[0, 65*gridsize[1]])
 			myfont = pygame.font.SysFont(None, 32)
 			label2 = myfont.render("", 1, (255,255,255))
-			if won == 'False':
+			if won == False:
 				label1 = myfont.render("You've been eaten!", 1, (255,255,255))
 			else: 
 				label1 = myfont.render("You've won!", 1, (255,255,255))
@@ -161,13 +161,13 @@ while not ended:
 	pacman_x2, pacman_y2, ghost_x2, ghost_y2, goal_x, goal_y, ended, won = g.game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, grid, numGhosts, ghost_type)
 
 	moves.append(move)
-	pacman[pacman_y][pacman_x]='False'
+	pacman[pacman_y][pacman_x]=False
 	for i in range(numGhosts):
-		ghost[ghost_y[i]][ghost_x[i]]='False'
+		ghost[ghost_y[i]][ghost_x[i]]=False
 	pacman_x, pacman_y, ghost_x, ghost_y = pacman_x2, pacman_y2, ghost_x2, ghost_y2;
-	pacman[pacman_y][pacman_x]='True'
+	pacman[pacman_y][pacman_x]=True
 	for i in range(numGhosts):
-		ghost[ghost_y[i]][ghost_x[i]]='True'
+		ghost[ghost_y[i]][ghost_x[i]]=True
 	
 print(moves)
 
