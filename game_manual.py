@@ -221,9 +221,6 @@ class Game():
         if (grid[ghost_y][ghost_x - 1] == 'False'):
             distance.append(((((pacman_x-(ghost_x-1))**2) + ((pacman_y-(ghost_y))**2))**0.5));
             moves.append(4);
-                    
-        print(moves)
-        print(distance)
         
         if r == 1:
             ghost_m = moves[distance.index(min(distance))]
