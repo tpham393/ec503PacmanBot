@@ -6,7 +6,7 @@ import math
 import random
 import time
 
-random_ghost = True;
+random_ghost = False;
 
 gridsize = [7, 7];
 grid = [['True', 'True', 'True', 'True', 'True', 'True', 'True'], 
@@ -205,7 +205,33 @@ class Game():
         global ghost_y
         self.drawBoard()
         self.win_check()
-        ghost_move = random.randint(1,4)
+        moves = [];
+        distance = [];
+        r = random.randint(1,2) # If there are two optimal moves allows it to randomly choose one
+        
+        if (grid[ghost_y - 1][ghost_x] == 'False'):
+            distance.append(((((pacman_x-ghost_x)**2) + ((pacman_y-(ghost_y-1))**2))**0.5));
+            moves.append(1);
+        if (grid[ghost_y][ghost_x + 1] == 'False'):
+            distance.append(((((pacman_x-(ghost_x+1))**2) + ((pacman_y-(ghost_y))**2))**0.5));
+            moves.append(2);
+        if (grid[ghost_y + 1][ghost_x] == 'False'):
+            distance.append(((((pacman_x-ghost_x)**2) + ((pacman_y-(ghost_y+1))**2))**0.5));
+            moves.append(3);
+        if (grid[ghost_y][ghost_x - 1] == 'False'):
+            distance.append(((((pacman_x-(ghost_x-1))**2) + ((pacman_y-(ghost_y))**2))**0.5));
+            moves.append(4);
+                    
+        print(moves)
+        print(distance)
+        
+        if r == 1:
+            ghost_m = moves[distance.index(min(distance))]
+        else:
+            moves.reverse() # Flipping the moves is one way that lets the script find a different equivalent minimum
+            distance.reverse()
+            ghost_m = moves[distance.index(min(distance))]
+            
         if (ghost_m == 1) and not (grid[ghost_y - 1][ghost_x] == 'True'):
             ghost[ghost_y][ghost_x]='False'
             ghost_y = ghost_y - 1;

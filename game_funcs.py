@@ -21,7 +21,7 @@ import math
 import random
 import time
 
-random_ghost = True; #Ghost movement random or chases you.
+random_ghost = False; #Ghost movement random or chases you.
 
 # Random Moving Ghost.
 def ghost_move(ghost_x, ghost_y, grid): 
@@ -47,12 +47,22 @@ def ghost_move2(pacman_x, pacman_y, ghost_x, ghost_y, grid):
     t_y = ghost_y;
     distances = []
     r = random.randint(1,2) # If there are two optimal moves allows it to randomly choose one
-
-    moves = [1, 2, 3, 4]
-    distance = [((((pacman_x-ghost_x)**2) + ((pacman_y-(ghost_y-1))**2))**0.5), 
-                ((((pacman_x-(ghost_x+1))**2) + ((pacman_y-(ghost_y))**2))**0.5),
-                ((((pacman_x-ghost_x)**2) + ((pacman_y-(ghost_y+1))**2))**0.5), 
-                ((((pacman_x-(ghost_x-1))**2) + ((pacman_y-(ghost_y))**2))**0.5)]
+    
+    moves = [];
+    distance = [];
+    
+    if (grid[ghost_y - 1][ghost_x] == 'False'):
+        distance.append(((((pacman_x-ghost_x)**2) + ((pacman_y-(ghost_y-1))**2))**0.5));
+        moves.append(1);
+    if (grid[ghost_y][ghost_x + 1] == 'False'):
+        distance.append(((((pacman_x-(ghost_x+1))**2) + ((pacman_y-(ghost_y))**2))**0.5));
+        moves.append(2);
+    if (grid[ghost_y + 1][ghost_x] == 'False'):
+        distance.append(((((pacman_x-ghost_x)**2) + ((pacman_y-(ghost_y+1))**2))**0.5));
+        moves.append(3);
+    if (grid[ghost_y][ghost_x - 1] == 'False'):
+        distance.append(((((pacman_x-(ghost_x-1))**2) + ((pacman_y-(ghost_y))**2))**0.5));
+        moves.append(4);
                 
     if r == 1:
         ghost_m = moves[distance.index(min(distance))]
