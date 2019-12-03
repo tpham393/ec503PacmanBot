@@ -1,4 +1,6 @@
 # ec503PacmanBot
 Game:
-Latest  Changes:
-Added ghost that chases the user. 
+
+(Planned changes)
+
+Format the inputs and outputs as a dictionary.

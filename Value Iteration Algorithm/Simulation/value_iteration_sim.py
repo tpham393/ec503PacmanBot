@@ -54,7 +54,7 @@ policy, V, steps = vi.value_iteration();
 env = vi.PacmanEnv();
 
 ## Random spawn
-pacman_x, pacman_y = 2,0;
+pacman_x, pacman_y = 0,2;
 while (pacman_x==gm.goal_x and pacman_y==gm.goal_y):
     pacman_x = ri(0,col-1);
     pacman_y = ri(0,row-1);
@@ -64,12 +64,15 @@ while (ghost_x==gm.goal_x and ghost_y==gm.goal_y) or (ghost_x==pacman_x and ghos
     ghost_x = ri(0,col-1);
     ghost_y = ri(0,row-1);
 
+# pacman_x, pacman_y = 0,2;
+# ghost_x, ghost_y = 2,2;
+
 gm.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
 
 ## Start game
 while not gm.ended:
     gm.update(); # update graphics
-    time.sleep(1)
+    time.sleep(0.5)
     # Get state (0 to numStates-1) from pacman and ghost coordinates
     p = xy_to_grid(gm.pacman_x, gm.pacman_y);
     g = xy_to_grid(gm.ghost_x, gm.ghost_y);
