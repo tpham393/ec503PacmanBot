@@ -174,12 +174,8 @@ class Game():
 					if temp:
 						self.ghost_move()
 					self.win_check()
-				# else: # ghost move even if pacman can't move
-					# if random_ghost:
-							# self.ghost_move()
-					# else:
-							# self.ghost_move2()
-					# self.win_check()
+				elif key[pygame.K_SPACE]: # ghost move and not pacman
+					self.ghost_move()
 				
 			pygame.display.flip()
 		else:
@@ -223,7 +219,6 @@ class Game():
 			distance = [];
 			potentialMoves = []; 
 			self.validGhostMove(t_x[i], t_y[i]-1)
-			print(valid_m)
 			if valid_m:
 				distance.append(((((pacman_x-ghost_x[i])**2) + ((pacman_y-(ghost_y[i]-1))**2))**0.5));
 				potentialMoves.append(1);
@@ -270,7 +265,6 @@ class Game():
 						potentialMoves.reverse() # Flipping the moves is one way that lets the script find a different equivalent minimum
 						distance.reverse()
 						ghost_m = potentialMoves[distance.index(min(distance))]
-					print(potentialMoves)
 					
 					if (ghost_m == 1):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
