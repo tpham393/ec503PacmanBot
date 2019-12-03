@@ -8,7 +8,7 @@ import math
 pelletLocX = 2;
 pelletLocY = 0;
 
-row, col = (3,3);
+row, col = (5,5);
 gridSize = row*col;
 numStates = gridSize*gridSize;
 directions = 4;
