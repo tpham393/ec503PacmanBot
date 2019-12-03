@@ -5,15 +5,12 @@ import pygame
 import math
 import random
 import time
-import game_funcs as g
-from random import randint as ri
 import threading
 
-pacman_x, pacman_y = 1, 2;
-ghost_x, ghost_y = 2, 2;
-goal_x, goal_y = 2, 1;
-moves = [];
-gridsize = [3, 3];
+gridsize = [5, 5];
+pacman_x, pacman_y = 1, 3;
+ghost_x, ghost_y = 3, 3;
+goal_x, goal_y = 3, 1;
 pacman = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
@@ -24,6 +21,9 @@ won = 'False'
 lost = 'False'
 turn_count=-1
 ended=False
+loaded=False
+pacman_move = 0;
+moved = True
 
 class Game():
     def __init__(self):
@@ -36,17 +36,21 @@ class Game():
         global pacman
         global pacman_x
         global pacman_y
+        global pacman_move
         global ghost
         global ghost_x
         global ghost_y
         global goal
         global goal_x
         global goal_y
+        global loaded
         global won
         global tied
         global loaded
+        global turn
         global turn_count
         global ended
+        global moved
         self.clock = pygame.time.Clock()
         self.initGraphics()
         
@@ -98,24 +102,123 @@ class Game():
         global loaded
         global pacman_x
         global pacman_y
+        global pacman_move
         global ghost_x
         global ghost_y
         global goal
+        global loaded
         global won
+        global turn
         global tied
+        global moved
         if not ended:
             self.clock.tick(60)
             self.screen.fill(0)
             self.drawBoard()
             self.drawHUD()
+            if not loaded:
+                turn = False
+                loaded = True
+                self.turn_timer()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
-                key=pygame.key.get_pressed()               
+                if (pacman_move == 1) and not (pacman_y - 1 == -1):
+                    pacman[pacman_y][pacman_x]='False'
+                    pacman_y = pacman_y - 1;
+                    pacman[pacman_y][pacman_x]='True'
+                    self.ghost_move()
+                    self.win_check()
+                    turn = False
+                    moved = True
+                elif (pacman_move == 2) and not (pacman_x + 1 == gridsize[0]):
+                    pacman[pacman_y][pacman_x]='False'
+                    pacman_x = pacman_x + 1;
+                    pacman[pacman_y][pacman_x]='True'
+                    self.ghost_move()
+                    self.win_check()
+                    turn = False
+                    moved = True
+                elif (pacman_move == 3) and not (pacman_y + 1 == gridsize[1]):
+                    pacman[pacman_y][pacman_x]='False'
+                    pacman_y = pacman_y + 1;
+                    pacman[pacman_y][pacman_x]='True'
+                    self.ghost_move()
+                    self.win_check()
+                    turn = False
+                    moved = True
+                elif (pacman_move == 4) and not (pacman_x - 1 == -1):
+                    pacman[pacman_y][pacman_x]='False'
+                    pacman_x = pacman_x - 1;
+                    pacman[pacman_y][pacman_x]='True'
+                    self.ghost_move()
+                    self.win_check()
+                    turn = False
+                    moved = True
+                
             pygame.display.flip()
         else:
             self.end()
-     
+        
+    def ghost_move(self):
+        global ghost_x
+        global ghost_y
+        self.drawBoard()
+        self.win_check()
+        ghost_move = random.randint(1,4)
+        if (ghost_move == 1) and not (ghost_y - 1 == -1):
+            ghost[ghost_y][ghost_x]='False'
+            ghost_y = ghost_y - 1;
+            ghost[ghost_y][ghost_x]='True'
+        elif (ghost_move == 2) and not (ghost_x + 1 == gridsize[0]):
+            ghost[ghost_y][ghost_x]='False'
+            ghost_x = ghost_x + 1;
+            ghost[ghost_y][ghost_x]='True'
+        elif (ghost_move == 3) and not (ghost_y + 1 == gridsize[1]):
+            ghost[ghost_y][ghost_x]='False'
+            ghost_y = ghost_y + 1;
+            ghost[ghost_y][ghost_x]='True'
+        elif (ghost_move == 4) and not (ghost_x - 1 == -1):
+            ghost[ghost_y][ghost_x]='False'
+            ghost_x = ghost_x - 1;
+            ghost[ghost_y][ghost_x]='True'
+        else:
+            self.ghost_move()
+            
+    def turn_timer(self):
+        global ended
+        global turn
+        global pacman_move
+        global moved
+
+        if moved:
+            pacman_move = random.randint(1,4) #This is where you can edit for the random moves
+            print(pacman_move)
+            turn = True;
+            moved = False
+        threading.Timer(2.0, self.turn_timer).start()
+            
+    
+    def win_check(self):
+        global pacman
+        global pacman_x
+        global pacman_y
+        global ghost
+        global ghost_x
+        global ghost_y
+        global goal_x
+        global goal_y
+        global won
+        global turn_count
+        global ended
+        turn_count = turn_count + 1
+        if (ghost_x == pacman_x) and (ghost_y == pacman_y):
+            won = 'False'
+            ended = True
+        elif (goal_x == pacman_x) and (goal_y == pacman_y):
+            won = 'True'
+            ended = True
+    
     def end(self):
         self.screen.fill(0)
         self.drawBoard()
@@ -131,26 +234,5 @@ class Game():
         
         
 tg = Game()
-
-#def turn_timer():
-#    tg.update()
-#    threading.Timer(0.1, turn_timer).start()
-
-#turn_timer();
-
-while not ended:
-    tg.update();
-    time.sleep(1)
-    move = ri(1,4);
-    pacman_x2, pacman_y2, ghost_x2, ghost_y2, goal_x, goal_y, ended, won, moved = g.game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y)
-    if moved:
-        moves.append(move)
-        pacman[pacman_y][pacman_x]='False'
-        ghost[ghost_y][ghost_x]='False'
-        pacman_x, pacman_y, ghost_x, ghost_y = pacman_x2, pacman_y2, ghost_x2, ghost_y2
-        pacman[pacman_y][pacman_x]='True'
-        ghost[ghost_y][ghost_x]='True'
-    
-print(moves)
-
-    
+while True:
+    tg.update()
