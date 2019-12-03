@@ -5,7 +5,7 @@ import game as game
 import time
 from random import randint as ri
 import math
-import ValueIterationAlgorithm2 as vi
+import Q_Learning as ql
 
 # Initial game parameters
 pelletLocX = 2;
@@ -50,22 +50,22 @@ def xy_to_grid(x,y):
 ############################  Game Simulation #################################
 ###############################################################################
 gm = game.Game(col,row);
-policy, V, steps = vi.value_iteration();
-env = vi.PacmanEnv();
+policy, V, steps = ql.q_learning();
+env = ql.PacmanEnv();
 
-## Random spawn
-pacman_x, pacman_y = 0,2;
-while (pacman_x==gm.goal_x and pacman_y==gm.goal_y):
-    pacman_x = ri(0,col-1);
-    pacman_y = ri(0,row-1);
-
-ghost_x, ghost_y = 2,0;
-while (ghost_x==gm.goal_x and ghost_y==gm.goal_y) or (ghost_x==pacman_x and ghost_y==pacman_y):
-    ghost_x = ri(0,col-1);
-    ghost_y = ri(0,row-1);
-
+# ## Random spawn
 # pacman_x, pacman_y = 0,2;
-# ghost_x, ghost_y = 2,2;
+# while (pacman_x==gm.goal_x and pacman_y==gm.goal_y):
+#     pacman_x = ri(0,col-1);
+#     pacman_y = ri(0,row-1);
+
+# ghost_x, ghost_y = 2,0;
+# while (ghost_x==gm.goal_x and ghost_y==gm.goal_y) or (ghost_x==pacman_x and ghost_y==pacman_y):
+#     ghost_x = ri(0,col-1);
+#     ghost_y = ri(0,row-1);
+
+pacman_x, pacman_y = 0,2;
+ghost_x, ghost_y = 2,2;
 
 gm.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
 
