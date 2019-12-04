@@ -127,6 +127,7 @@ while (ghost_x==game.goal_x and ghost_y==game.goal_y) or (ghost_x==pacman_x and 
     ghost_x = ri(0,col-1);
     ghost_y = ri(0,row-1);
 '''
+'''
 pacman_x,pacman_y = 0,0;
 ghost_x, ghost_y = 0,0;
 game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
@@ -152,3 +153,4 @@ while not game.ended:
     game.updateState(pacman_x2, pacman_y2, ghost_x2, ghost_y2); # update internal grid
 # Update one last time before game end
 game.update(); 
+'''
