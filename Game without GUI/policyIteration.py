@@ -243,6 +243,7 @@ if __name__ == '__main__':
     ###############################################################################
     game = Game(col,row);
 
+    '''
     ## Random spawn
     pacman_x, pacman_y = 2,0;
     while (pacman_x==game.goal_x and pacman_y==game.goal_y):
@@ -253,7 +254,9 @@ if __name__ == '__main__':
     while (ghost_x==game.goal_x and ghost_y==game.goal_y) or (ghost_x==pacman_x and ghost_y==pacman_y):
         ghost_x = ri(0,col-1);
         ghost_y = ri(0,row-1);
-
+    '''
+    pacman_x,pacman_y = 0,0;
+    ghost_x, ghost_y = 0,0;
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
 
     ## Start game
