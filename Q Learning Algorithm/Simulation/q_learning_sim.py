@@ -1,11 +1,11 @@
-# simulation for value iteration algorithm
+# simulation for q learning algorithm
 
 import game_funcs as gf
 import game as game
 import time
 from random import randint as ri
 import math
-import Q_Learning as ql
+import q_learning as ql
 
 # Initial game parameters
 pelletLocX = 2;
@@ -49,8 +49,10 @@ def xy_to_grid(x,y):
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
+num_episodes = 1000 # number of epochs/episodes
+
 gm = game.Game(col,row);
-policy, V, steps = ql.q_learning();
+policy, Q, steps = ql.q_learning(episodes=num_episodes);
 env = ql.PacmanEnv();
 
 # ## Random spawn

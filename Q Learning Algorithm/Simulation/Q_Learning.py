@@ -173,10 +173,10 @@ class PacmanEnv:
         
 
 
-# In[6]:
+# In[56]:
 
 
-def q_learning(env=PacmanEnv(), gamma=0.5, alpha=0.1, epsilon=0.1, episodes=5):
+def q_learning(env=PacmanEnv(), gamma=0.9, alpha=0.9, epsilon=0.1, episodes=5):
     '''
     Q-Learning Algorithm
 
@@ -211,25 +211,27 @@ def q_learning(env=PacmanEnv(), gamma=0.5, alpha=0.1, epsilon=0.1, episodes=5):
     
     # initialize Q(s,a) matrix to all zeros
     Q = np.zeros([env.num_states, env.num_actions])
-    converged = False
     steps = 0
     
     for t in range(episodes):
         print('Episode #', t)
+        converged = False
         
          # select random state
         state = random.randint(0, env.num_states-1)
         
         # run inner loop for each episode until a terminal state has been reached
-        while ~converged:
+        while not converged:
             print('Q learning, step ', steps, '...')
             
             # select action
             if random.uniform(0, 1) < epsilon:
                 action = random.randint(0,3) # exploration
+                #print('random action: ', action)
             else:
                 action = np.argmax(Q[state, :]) # exploitation
-            
+                #print('exploit action: ', action)
+
             ghost_mvmt = random.randint(0,3) # simulate random movement for the ghost
 
             # travel to the next state, taking action selected above
@@ -242,36 +244,34 @@ def q_learning(env=PacmanEnv(), gamma=0.5, alpha=0.1, epsilon=0.1, episodes=5):
             next_ghost_loc = move(x_g, y_g, ghost_mvmt)
 
             next_state = return_state(env.states, next_pacman_loc, next_ghost_loc)
+            #print('next state: ', next_state)
         
             # to get reward, need to find specific entry of P[s][a] with same next_state...
             reward = 0
             for ns in range( len(env.P[state][action]) ): # array of tuples (probability, next_state, reward, done)
                 if (env.P[state][action][ns][1] == next_state):
                     reward = env.P[state][action][ns][2]
+            #print('reward: ', reward)
 
             # in next state, select action with highest Q-value
             max_next_action_value = np.max(Q[next_state, :])
 
             # update Q-values tables with equation
+            #print('old value: ', Q[state][action])
             Q[state][action] = ((1-alpha)*Q[state][action]) + (alpha*(reward + (gamma * max_next_action_value)))
+            #print('new value: ', Q[state][action])
 
-            # if reached terminal state (i.e. next state = terminal state), converged = True
-            if (next_pacman_loc == next_ghost_loc or next_pacman_loc == env.pellet_loc):
-                converged = True
-            
             # set next state as current state & repeat
             state = next_state 
-
             steps += 1
+            
+            # if reached terminal state (i.e. next state = terminal state), converged = True
+            #print('convergence: ', env.P[next_state][action][0][3])
+            converged = env.P[next_state][action][0][3]
+            #print('converged: ', converged)
 
-        # extract optimal policy after calculating optimal V
-        policy = extract_policy(Q)
+    # extract optimal policy after calculating optimal V
+    policy = extract_policy(Q)
 
-        return policy, Q, steps
-
-
-# In[ ]:
-
-
-
+    return policy, Q, steps
 
