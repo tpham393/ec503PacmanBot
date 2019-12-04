@@ -3,6 +3,8 @@ from game import Game
 import time
 from random import randint as ri
 import math
+import numpy as np  
+import matplotlib.pyplot as plt
 
 # Initial game parameters
 pelletLocX = 2;
@@ -15,7 +17,7 @@ directions = 4;
 
 winReward = 1000;
 loseReward = -1000;
-gamma = 0.25;
+#gamma = 0.25;
 prob = 0.25;
 
 def state2coord(state):
@@ -138,7 +140,7 @@ def gameEnd(state):
     return False;
 
 ########################## Policy evaluation ##################################
-def policyEvaluation(policy, v):
+def policyEvaluation(policy, v, gamma):
     # Set parameters
     deltaLim = 0.00001;
     delta = 10000;
@@ -160,14 +162,14 @@ def policyEvaluation(policy, v):
             v[state] = sum(vNextStates);
 
             delta = max(delta, abs(v[state]-vStateOld));
-        print("Delta",delta);
+        #print("Delta",delta);
         cnt += 1;
     print("Policy evalulation converged at", cnt);
     return v;
 
 
 ########################## Policy Improvement #################################
-def policyImprovement(policy, v):
+def policyImprovement(policy, v, gamma):
     policyStable = True;
     for state in range(numStates):
         if (gameEnd(state)): # game ended
@@ -196,19 +198,39 @@ def policyImprovement(policy, v):
 ###############################################################################
 ############################  Policy Iteration ################################
 ###############################################################################
-# Init
-v = [0]*numStates;
-policy = [0]*numStates;
-policyStable = False;
+def policyIteration(gamma):
+    # Init
+    v = [0]*numStates;
+    policy = [0]*numStates;
+    policyStable = False;
 
-# Run Policy Iteration
-policyIter = 1;
-while (not policyStable):
-    v = policyEvaluation(policy, v);
-    policy, policyStable = policyImprovement(policy, v);
-    print("Total iterations:", policyIter)
-    policyIter += 1;
+    # Run Policy Iteration
+    policyIter = 1;
+    while (not policyStable):
+        v = policyEvaluation(policy, v, gamma);
+        policy, policyStable = policyImprovement(policy, v, gamma);
+        print("Total iterations:", policyIter)
+        policyIter += 1;
+    return policy, policyIter;
 
+gammas = np.arange(0.05,1,0.05)
+convSteps = [];
+for i in gammas:
+    _, policyIter = policyIteration(i);
+    convSteps.append(policyIter);
+
+print("gamma len", len(gammas))
+print("convSteps len", len(convSteps))
+plt.plot(gammas, convSteps)
+plt.xlabel('gamma')
+plt.ylabel('# steps to convergence')
+plt.xticks(np.arange(0,1,0.1))
+plt.show()
+
+time.sleep(10);
+exit(0);
+
+policy, policyIter = policyIteration();
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
