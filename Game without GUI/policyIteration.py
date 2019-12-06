@@ -4,7 +4,7 @@ import time
 from random import randint as ri
 import math
 import numpy as np  
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 # Initial game parameters
 pelletLocX = 2;
@@ -233,11 +233,10 @@ if __name__ == '__main__':
     exit(0);
     '''
     policy, V, policyIter = policyIteration(0.25);
-    f = open("policyIter.txt","w");
+    f = open("originalPolicyIter.txt","w");
     for i in policy:
         f.write(str(i)+"\n");
     f.close(); 
-
     ###############################################################################
     ############################  Game Simulation #################################
     ###############################################################################
@@ -256,7 +255,7 @@ if __name__ == '__main__':
         ghost_y = ri(0,row-1);
     '''
     pacman_x,pacman_y = 0,0;
-    ghost_x, ghost_y = 0,0;
+    ghost_x, ghost_y = 1,1;
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
 
     ## Start game

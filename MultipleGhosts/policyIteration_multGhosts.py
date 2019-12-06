@@ -10,7 +10,7 @@ numGhosts = 2;
 pelletLocX = 2;
 pelletLocY = 0;
 
-row, col = (4,4);
+row, col = (3,3);
 gridSize = row*col;
 numStates = int(math.pow(gridSize,1+numGhosts));
 directions = 4;
@@ -251,9 +251,8 @@ def policyEvaluation(policy, v):
             # Compute V(s)
             vNextStates = [prob*(rewards[i]+gamma*v[nextStates[i]]) for i in range(len(nextStates))];
             v[state] = sum(vNextStates);
-
             delta = max(delta, abs(v[state]-vStateOld));
-        print("Delta",delta);
+        #print("Delta",delta);
         cnt += 1;
     print("Policy evalulation converged at", cnt);
     return v;
@@ -305,7 +304,7 @@ if __name__ == '__main__':
         policyIter += 1;
 
     # Write policy to file
-    filename = "policy_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(numGhosts);
+    filename = "Original_policy_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(numGhosts);
     f = open(filename+".txt", "w");
     for val in policy:
         f.write(str(val)+'\n');

@@ -39,14 +39,14 @@ def validGhostMove(x, y, ghost_x, ghost_y, gridsize):
     return True;
 
 # Random Moving Ghost.
-def ghost_move(ghost_x, ghost_y, numGhosts, gridsize): 
+def ghost_move(ghost_x, ghost_y, gridsize): 
     ''' 
     Randomly move each ghost.
     '''
     t_x = ghost_x[:];
     t_y = ghost_y[:];
 
-    for i in range(numGhosts): # Get random move for each ghost
+    for i in range(len(ghost_x)): # Get random move for each ghost
         # Modified ghost_x and ghost_y for preventing overlap between ghost positions
         modGhost_x = t_x[:];
         del modGhost_x[i];
@@ -161,7 +161,7 @@ def gameStatus(pacman_x, pacman_y, ghost_x, ghost_y, pellet_x, pellet_y):
             break;  
     return ended, won;  
 
-def game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, gridX, gridY, numGhosts):
+def game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, gridX, gridY):
     gridsize = [gridX, gridY];
     won = False
     ended = False
@@ -180,7 +180,7 @@ def game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, gridX,
     t_x = ghost_x;
     t_y = ghost_y;
     if random_ghost:
-        t_x, t_y = ghost_move(ghost_x, ghost_y, numGhosts, gridsize);
+        t_x, t_y = ghost_move(ghost_x, ghost_y, gridsize);
     else: # Not configured for 2 ghosts yet
         t_x, t_y, ended = ghost_move2(pacman_x, pacman_y, ghost_x, ghost_y);
     

@@ -33,7 +33,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.initGraphics()
         
-    def updateState(self, pacman_x, pacman_y, ghost_x, ghost_y, numGhosts):
+    def updateState(self, pacman_x, pacman_y, ghost_x, ghost_y):
         self.pacman[self.pacman_y][self.pacman_x]='False'
         for i in range(len(self.ghost_x)):
             self.ghost[self.ghost_y[i]][self.ghost_x[i]]='False'
@@ -44,7 +44,7 @@ class Game():
         self.ghost_y = ghost_y;
         
         self.pacman[self.pacman_y][self.pacman_x]='True'
-        for i in range(numGhosts):
+        for i in range(len(ghost_x)):
             self.ghost[self.ghost_y[i]][self.ghost_x[i]]='True'
 
     def initGraphics(self):
