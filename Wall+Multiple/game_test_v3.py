@@ -84,7 +84,7 @@ class Game():
 			for y in range(gridsize[1]):
 				if ghost[y][x] == 'Random':
 					self.screen.blit(self.g, [(x)*64+5, (y)*64+5])
-				if ghost[y][x] == 'Chase':
+				elif ghost[y][x] == 'Chase':
 					self.screen.blit(self.g2, [(x)*64+5, (y)*64+5])
 				elif pacman[y][x] == True:
 					self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
