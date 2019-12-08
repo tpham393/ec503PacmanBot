@@ -1,5 +1,5 @@
-import game_funcs_multGhosts as g
-from game_multGhosts import Game
+import game_funcs as g
+from game import Game
 from environment import *
 
 from random import randint as ri
@@ -44,7 +44,6 @@ def policyEvaluation(policy, v, env):
             for prob, nextState, reward, done in env.P[state][action]:
                 action_val += prob * (reward + gamma*v[nextState]);
             v[state] = action_val;
-
             delta = max(delta, abs(v[state]-vStateOld));
         #print("Delta",delta);
         cnt += 1;
@@ -78,8 +77,8 @@ def policyIteration(env):
     while (not policyStable):
         v = policyEvaluation(policy, v, env);
         policy, policyStable = policyImprovement(policy, v, env);
-        print("Total iterations:", policyIter)
         policyIter += 1;
+    print("Total iterations:", policyIter)
 
 
     # Write policy to file
@@ -90,20 +89,33 @@ def policyIteration(env):
     f.close();
 
     return policy, v, policyIter;
+
 if __name__ == '__main__':
     # Init
     col, row =7,7;
     grid_len = 3;
-    num_ghosts = 1;
-    game = Game(7,7);
-    game
-    env = PacmanEnv(num_ghosts=1, grid=game.grid);
+    num_ghosts = 2;
+    game = Game();
+    env = PacmanEnv(num_ghosts=num_ghosts, grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
     policy, v, policyIter = policyIteration(env);
 
-    pacman_x,pacman_y = 0,0;
-    ghost_x = [1];
-    ghost_y = [1]
-    game.updateState(pacman_x, pacman_y, ghost_x, ghost_y); # update internal grid
+
+    # Write policy to file
+    filename = "Original_policy_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(num_ghosts);
+    f = open(filename+".txt", "w");
+    for val in policy:
+      f.write(str(val)+'\n');
+    f.close();
+
+    exit(0);
+
+    ###########################################################################
+    ###########################################################################
+
+    pacman_x,pacman_y = 5,1;
+    ghost_x = [3, 2];
+    ghost_y = [1, 2];
+    game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts); # update internal grid
 
     ## Start game
     while not game.ended:
@@ -112,13 +124,12 @@ if __name__ == '__main__':
         # Get state (0 to numStates-1) from pacman and ghost coordinates
         state = env.coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y);
 
-    
         # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4
         move = policy[state] + 1;
     
         # Get game status given current state and move (action)
-        pacman_x2, pacman_y2, ghost_x2, ghost_y2, game.goal_x, game.goal_y, game.ended, game.won = g.game_func(move, game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, game.goal_x, game.goal_y, game.grid, 1, ['Random']);
+        pacman_x2, pacman_y2, ghost_x2, ghost_y2, game.goal_x, game.goal_y, game.ended, game.won = g.game_func(move, game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, game.goal_x, game.goal_y, game.grid, 2, ['Chase','Random']);
         game.moves.append(move);
-        game.updateState(pacman_x2, pacman_y2, ghost_x2, ghost_y2); # update internal grid
+        game.updateState(pacman_x2, pacman_y2, ghost_x2, ghost_y2, num_ghosts); # update internal grid
     # Update one last time before game end
     game.update(); 

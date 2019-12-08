@@ -7,17 +7,17 @@ import threading
 
 class Game():
     def __init__(self,gridX,gridY):
-        pass
+        #pass
         pygame.init()
         pygame.font.init()
-        self.gridsize = [gridX,gridY];
-		self.grid = [['True', 'True', 'True', 'True', 'True', 'True', 'True'], 
-					['True', 'False', 'False', 'False', 'False', 'False', 'True'],
-					['True', 'False', 'True', 'False', 'True', 'False', 'True'],
-					['True', 'False', 'False', 'False', 'False', 'False', 'True'],
-					['True', 'False', 'True', 'True', 'True', 'False', 'True'],
-					['True', 'False', 'False', 'False', 'False', 'False', 'True'],
-					['True', 'True', 'True', 'True', 'True', 'True', 'True']];
+        self.gridsize = [7, 7];
+        self.grid = [[True, True, True, True, True, True, True], 
+                [True, False, False, False, False, False, True],
+                [True, False, True, False, True, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, True, True, True, False, True],
+                [True, False, False, False, False, False, True],
+                [True, True, True, True, True, True, True]];
         width, height = 65*self.gridsize[0], 65*self.gridsize[1]+74
         self.screen = pygame.display.set_mode((width,height))
         pygame.display.set_caption("Game")
@@ -61,7 +61,7 @@ class Game():
         self.p=pygame.image.load("Graphics/p.png")
         self.g=pygame.image.load("Graphics/g.png")
         self.w=pygame.image.load("Graphics/w.png")
-		self.wall=pygame.image.load("Graphics/wall.png")
+        self.wall=pygame.image.load("Graphics/wall.png")
         
     def drawBoard(self):
         for x in range(self.gridsize[0]):
@@ -80,7 +80,7 @@ class Game():
                     self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
                 elif self.goal[y][x] == 'True':
                     self.screen.blit(self.w, [(x)*64+5, (y)*64+5])
-				elif self.grid[y][x] == 'True':
+                elif self.grid[y][x] == 'True':
                     self.screen.blit(self.wall, [(x)*64+5, (y)*64+5])
         
     def drawHUD(self):

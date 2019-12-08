@@ -25,6 +25,8 @@ def validGhostMove(x, y, ghost_x, ghost_y, grid):
 	'''
 	Given new ghost location and locations of the other ghosts, see if new location is valid.
 	'''
+	if x>=len(grid) or x<0 or y>=len(grid) or y<0:
+		return False;
 	# Check if ghost move is into a wall or not
 	if (grid[y][x] == True): 
 		return False;

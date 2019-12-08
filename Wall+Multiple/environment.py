@@ -1,4 +1,5 @@
 import math
+from game_funcs import ghost_move
 
 UP = 2
 DOWN = 0
@@ -79,16 +80,16 @@ class PacmanEnv:
 
     def move(self, x, y, action):
         if action == UP:
-            if self.grid[y+1][x] == 'False':
+            if y+1<self.grid_len and self.grid[y+1][x] == False:
                 y = y+1;
         elif action == RIGHT:
-            if self.grid[y][x+1] == 'False':
+            if x+1<self.grid_len and self.grid[y][x+1] == False:
                 x = x+1;
         elif action ==  DOWN:
-            if self.grid[y-1][x] == 'False':
+            if y-1>=0 and self.grid[y-1][x] == False:
                 y = y-1;
         elif action==LEFT:
-            if self.grid[y][x-1] == 'False':
+            if x-1>=0 and self.grid[y][x-1] == False:
                 x = x-1;
         '''
         if action == UP:
@@ -192,24 +193,42 @@ class PacmanEnv:
                         Largly depends on potential ghost movements.
             rewards: List of rewards for each potential next state.
         '''
-        # Get currState coordinates
-        pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(currState);
-        # Get pacman location after performing action
-        pacmanLocX_next, pacmanLocY_next = self.move(pacmanLocX, pacmanLocY, action);
-        # Get all possible ghost states
         nextStates = []; # possible next states
         rewards = []; # rewards for each next state
         done = []; # whether game is done for each next state
         probs = []; # transition probs for each next state
         defaultProb = 1/math.pow(4,self.num_ghosts);
-        # Check whether current state is in done state
+
+        # Get currState coordinates
+        pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(currState);
+
+        # Check whether current w/in bounds
+        if (self.grid[pacmanLocY][pacmanLocX] == True):
+            return probs, nextStates, rewards, done;
+        # Get pacman location after performing action
+        pacmanLocX_next, pacmanLocY_next = self.move(pacmanLocX, pacmanLocY, action);
+
+        ## Get all possible ghost states
+        # Check whether current state is in done state: eaten by ghost or eaten pellet
         _, currStateDone = self.calculate_reward(pacmanLocX,pacmanLocY,ghostLocX,ghostLocY);
         if (currStateDone):
             return probs, nextStates, rewards, done;
+
+        # Get next location from chasing ghost
+        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
+        chaseLocX, chaseLocY = t_x[0], t_y[0];
+        if (chaseLocX > ghostLocX[0]):
+            chaseGhostAction = RIGHT;
+        elif (chaseLocX < ghostLocX[0]):
+            chaseGhostAction = LEFT;
+        elif (chaseLocY > ghostLocY[0]):
+            chaseGhostAction = UP;
+        else:
+            chaseGhostAction = DOWN;
+
         for i in range(4): # need to be hardcoded, <numGhosts> number of loops
-            #for j in range(4):
             # Get ghost next location given action
-            ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [i, j]);
+            ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [chaseGhostAction, i]);
             # if pacman not moving through ghost
             if (not self.moveThrough(pacmanLocX_next, pacmanLocY_next, pacmanLocX, pacmanLocY, ghostLocX_next, ghostLocY_next, ghostLocX, ghostLocY)):
                 state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
@@ -226,12 +245,12 @@ class PacmanEnv:
 
         return probs, nextStates, rewards, done;
 
-    def __init__(self, grid_len=3, num_ghosts=1, winReward=1000, loseReward=-1000, grid=[]):
+    def __init__(self, grid_len=3, num_ghosts=1, pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[]):
         self.num_ghosts = num_ghosts
         self.grid_len = grid_len;
-        self.grid_size = grid_len**2;
+        self.grid_size = grid_len*grid_len;
         self.num_states = int(math.pow(self.grid_size, 1+self.num_ghosts))
-        self.pellet_x, self.pellet_y = 2, 0;
+        self.pellet_x, self.pellet_y = pellet_x, pellet_y;
         self.winReward = winReward;
         self.loseReward = loseReward;
         self.grid = grid;
@@ -244,4 +263,5 @@ class PacmanEnv:
                 pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(s);
                 probs, nextStates, rewards, done = self.nextMove(s, a);
                 self.P[s][a] = [[probs[i], nextStates[i], rewards[i], done[i]] for i in range(len(nextStates))];
+
         

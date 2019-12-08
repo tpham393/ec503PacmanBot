@@ -5,7 +5,7 @@ import pygame
 import math
 import random
 import time
-import game_funcs_v3 as g
+import game_funcs as g
 from random import randint as ri
 import threading
 
