@@ -29,7 +29,7 @@ ghost  = [[False for x in range(gridsize[0])] for y in range(gridsize[1])]
 goal = [[False for x in range(gridsize[0])] for y in range(gridsize[1])]
 pacman[pacman_y][pacman_x] = True;
 for i in range(numGhosts):
-	ghost[ghost_y[i]][ghost_x[i]]=True
+	ghost[ghost_y[i]][ghost_x[i]]=ghost_type[i]
 goal[goal_y][goal_x] = True;
 won = False
 lost = False
@@ -67,6 +67,7 @@ class Game():
 		self.score=pygame.image.load("Graphics/score.png")
 		self.p=pygame.image.load("Graphics/p.png")
 		self.g=pygame.image.load("Graphics/g.png")
+		self.g2=pygame.image.load("Graphics/g2.png")
 		self.w=pygame.image.load("Graphics/w.png")
 		self.wall=pygame.image.load("Graphics/wall.png")
 		
@@ -81,8 +82,10 @@ class Game():
 		
 		for x in range(gridsize[0]):
 			for y in range(gridsize[1]):
-				if ghost[y][x] == True:
+				if ghost[y][x] == 'Random':
 					self.screen.blit(self.g, [(x)*64+5, (y)*64+5])
+				if ghost[y][x] == 'Chase':
+					self.screen.blit(self.g2, [(x)*64+5, (y)*64+5])
 				elif pacman[y][x] == True:
 					self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
 				elif goal[y][x] == True:
@@ -167,7 +170,7 @@ while not ended:
 	pacman_x, pacman_y, ghost_x, ghost_y = pacman_x2, pacman_y2, ghost_x2, ghost_y2;
 	pacman[pacman_y][pacman_x]=True
 	for i in range(numGhosts):
-		ghost[ghost_y[i]][ghost_x[i]]=True
+		ghost[ghost_y[i]][ghost_x[i]]=ghost_type[i]
 	
 print(moves)
 

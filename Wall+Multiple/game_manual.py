@@ -27,7 +27,7 @@ ghost  = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 goal = [['False' for x in range(gridsize[0])] for y in range(gridsize[1])]
 pacman[pacman_y][pacman_x] = 'True';
 for i in range(numGhosts):
-	ghost[ghost_y[i]][ghost_x[i]]='True'
+	ghost[ghost_y[i]][ghost_x[i]]=ghost_type[i]
 goal[goal_y][goal_x] = 'True';
 won = 'False'
 lost = 'False'
@@ -69,6 +69,7 @@ class Game():
 		self.score=pygame.image.load("Graphics/score.png")
 		self.p=pygame.image.load("Graphics/p.png")
 		self.g=pygame.image.load("Graphics/g.png")
+		self.g2=pygame.image.load("Graphics/g2.png")
 		self.w=pygame.image.load("Graphics/w.png")
 		self.wall=pygame.image.load("Graphics/wall.png")
 		
@@ -83,8 +84,10 @@ class Game():
 		
 		for x in range(gridsize[0]):
 			for y in range(gridsize[1]):
-				if ghost[y][x] == 'True':
+				if ghost[y][x] == 'Random':
 					self.screen.blit(self.g, [(x)*64+5, (y)*64+5])
+				if ghost[y][x] == 'Chase':
+					self.screen.blit(self.g2, [(x)*64+5, (y)*64+5])
 				elif pacman[y][x] == 'True':
 					self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
 				elif goal[y][x] == 'True':
@@ -244,19 +247,19 @@ class Game():
 					if (ghost_m == 1):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_y[i] = ghost_y[i] - 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Random'
 					elif (ghost_m == 2):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_x[i] = ghost_x[i] + 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Random'
 					elif (ghost_m == 3):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_y[i] = ghost_y[i] + 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Random'
 					else:
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_x[i] = ghost_x[i] - 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Random'
 				elif (ghost_type[i] == 'Chase'):
 					r = random.randint(1,2) # If there are two optimal moves allows it to randomly choose one
 					if r == 1:
@@ -269,19 +272,19 @@ class Game():
 					if (ghost_m == 1):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_y[i] = ghost_y[i] - 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Chase'
 					elif (ghost_m == 2):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_x[i] = ghost_x[i] + 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Chase'
 					elif (ghost_m == 3):
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_y[i] = ghost_y[i] + 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Chase'
 					else:
 						ghost[ghost_y[i]][ghost_x[i]]='False'
 						ghost_x[i] = ghost_x[i] - 1;
-						ghost[ghost_y[i]][ghost_x[i]]='True'
+						ghost[ghost_y[i]][ghost_x[i]]='Chase'
 				else:
 					print('Ghost move error');      
 	
