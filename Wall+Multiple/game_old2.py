@@ -6,60 +6,62 @@ from random import randint as ri
 import threading
 
 class Game():
-    def __init__(self,gridX,gridY):
-        pass
+    def __init__(self):
+        #pass
         pygame.init()
         pygame.font.init()
-        self.gridsize = [gridX,gridY];
-		self.grid = [[True, True, True, True, True, True, True], 
-					[True, False, False, False, False, False, True],
-					[True, False, True, False, True, False, True],
-					[True, False, False, False, False, False, True],
-					[True, False, True, True, True, False, True],
-					[True, False, False, False, False, False, True],
-					[True, True, True, True, True, True, True]];
+        self.gridsize = [7, 7];
+        self.grid = [[True, True, True, True, True, True, True],
+                [True, False, False, False, False, False, True],
+                [True, False, True, False, True, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, True, True, True, False, True],
+                [True, False, False, False, False, False, True],
+                [True, True, True, True, True, True, True]];
+        '''
+        self.grid = [[True, True, True, True, True, True, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, True, True, True, True, True, True]];
+        '''
         width, height = 65*self.gridsize[0], 65*self.gridsize[1]+74
         self.screen = pygame.display.set_mode((width,height))
         pygame.display.set_caption("Game")
         self.pacman_x, self.pacman_y = 0, 2;
         self.ghost_x = [];
         self.ghost_y = [];
-		self.ghost_type = ['Random', 'Chase'];
-        self.goal_x, self.goal_y = 2, 0;
+        self.goal_x, self.goal_y = 1,5;
         self.moves = [];
-        self.pacman = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
-        self.ghost = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
-        self.goal = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
-        self.pacman[self.pacman_y][self.pacman_x] = True;
-        #self.ghost[self.ghost_y][self.ghost_x] = True;
-        self.goal[self.goal_y][self.goal_x] = True;
-        self.won = False
-        self.lost = False
+        self.pacman = [['False' for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
+        self.ghost = [['False' for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
+        self.goal = [['False' for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
+        self.pacman[self.pacman_y][self.pacman_x] = 'True';
+        #self.ghost[self.ghost_y][self.ghost_x] = 'True';
+        self.goal[self.goal_y][self.goal_x] = 'True';
+        self.won = 'False'
+        self.lost = 'False'
         self.turn_count=-1
         self.ended = False
-		self.s_num = 0;
-		
 
         self.clock = pygame.time.Clock()
         self.initGraphics()
         
-    def updateState(self, pacman_x, pacman_y, ghost_x, ghost_y, numGhosts, ghost_type):
-        self.pacman[self.pacman_y][self.pacman_x]=False
+    def updateState(self, pacman_x, pacman_y, ghost_x, ghost_y, numGhosts):
+        self.pacman[self.pacman_y][self.pacman_x]='False'
         for i in range(len(self.ghost_x)):
-            self.ghost[self.ghost_y[i]][self.ghost_x[i]]=False
+            self.ghost[self.ghost_y[i]][self.ghost_x[i]]='False'
 
         self.pacman_x = pacman_x;
         self.pacman_y = pacman_y;
         self.ghost_x = ghost_x;
         self.ghost_y = ghost_y;
-		
-		filen = 'ss_' + str(self.s_num) + '.png';
-		pygame.image.save(self.screen,filen)
-		self.s_num = self.s_num + 1;
         
-        self.pacman[self.pacman_y][self.pacman_x]=True
+        self.pacman[self.pacman_y][self.pacman_x]='True'
         for i in range(numGhosts):
-            self.ghost[self.ghost_y[i]][self.ghost_x[i]]=ghost_type[i];
+            self.ghost[self.ghost_y[i]][self.ghost_x[i]]='True'
 
     def initGraphics(self):
         self.linev=pygame.image.load("Graphics/line.png")
@@ -67,9 +69,8 @@ class Game():
         self.score=pygame.image.load("Graphics/score.png")
         self.p=pygame.image.load("Graphics/p.png")
         self.g=pygame.image.load("Graphics/g.png")
-		self.g=pygame.image.load("Graphics/g2.png")
         self.w=pygame.image.load("Graphics/w.png")
-		self.wall=pygame.image.load("Graphics/wall.png")
+        self.wall=pygame.image.load("Graphics/wall.png")
         
     def drawBoard(self):
         for x in range(self.gridsize[0]):
@@ -82,15 +83,13 @@ class Game():
         
         for x in range(self.gridsize[0]):
             for y in range(self.gridsize[1]):
-                if self.ghost[y][x] == 'Random':
+                if self.ghost[y][x] == 'True':
                     self.screen.blit(self.g, [(x)*64+5, (y)*64+5])
-				elif self.ghost[y][x] == 'Chase':
-                    self.screen.blit(self.g2, [(x)*64+5, (y)*64+5])
-                elif self.pacman[y][x] == True:
+                elif self.pacman[y][x] == 'True':
                     self.screen.blit(self.p, [(x)*64+5, (y)*64+5])
-                elif self.goal[y][x] == True:
+                elif self.goal[y][x] == 'True':
                     self.screen.blit(self.w, [(x)*64+5, (y)*64+5])
-				elif self.grid[y][x] == True:
+                elif self.grid[y][x] == True:
                     self.screen.blit(self.wall, [(x)*64+5, (y)*64+5])
         
     def drawHUD(self):
@@ -118,15 +117,13 @@ class Game():
         #self.drawHUD()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit()              
+                exit()
+            key=pygame.key.get_pressed()               
         pygame.display.flip()
         if self.ended:
             self.end()
      
     def end(self):
-		filen = 'ss_' + str(self.s_num) + '.png';
-		pygame.image.save(self.screen,filen)
-		self.s_num = self.s_num + 1;
         self.screen.fill(0)
         self.drawBoard()
         self.drawHUD()
