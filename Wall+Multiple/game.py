@@ -59,7 +59,7 @@ class Game():
         self.ghost_y = ghost_y;
 		
         filen = 'ss_' + str(self.s_num) + '.png';
-        #pygame.image.save(self.screen,filen)
+        pygame.image.save(self.screen,filen)
         self.s_num = self.s_num + 1;
         
         self.pacman[self.pacman_y][self.pacman_x]=True

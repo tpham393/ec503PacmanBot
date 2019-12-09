@@ -79,8 +79,11 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
         convSteps = 0;
         # run inner loop for each episode until a terminal state has been reached
-        max(minAlpha, initAlpha * (0.85 ** (t//100)))
-
+        alpha = max(minAlpha, initAlpha * (0.85 ** (t//100)))
+        #if t == 0:
+        #    epsilon = 1;
+        #else:
+        #    epsilon = 1/t;
         while not converged:
             metStates.append(state);
 
@@ -126,7 +129,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 if __name__ == '__main__':
     # Init
-    eps = 1000000;
+    eps = 100000;
     game = Game();
     env = PacmanEnv(num_ghosts=2, ghost_type=['Chase','Random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid, createP=False);
     policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=eps)

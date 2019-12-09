@@ -262,7 +262,7 @@ class PacmanEnv:
             done = True;
         return nextState, reward, done;
 
-    def __init__(self, grid_len=3, num_ghosts=1, ghost_type = ['random'], pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[], createP = True):
+    def __init__(self, grid_len=3, num_ghosts=1, ghost_type = ['Random'], pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[], createP = True):
         self.num_ghosts = num_ghosts
         self.grid_len = grid_len;
         self.grid_size = grid_len*grid_len;
