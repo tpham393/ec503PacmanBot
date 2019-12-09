@@ -61,7 +61,7 @@ while not game.ended:
     time.sleep(0.5);
     # Get state (0 to numStates-1) from pacman and ghost coordinates
     state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, num_ghosts, grid_len);
-
+    print(state)
     # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4
     move = policy[state] + 1;
 

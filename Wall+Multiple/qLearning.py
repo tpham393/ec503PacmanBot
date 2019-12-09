@@ -57,9 +57,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
             policy[s] = best_action; # deterministic optimal policy, i.e. always take best_action for given state
         
         return policy
-    
-    #game = Game();
-    
+        
     # initialize Q(s,a) matrix to all zeros
     Q = np.zeros([env.num_states, 4])
     steps = 0
@@ -68,17 +66,17 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
         converged = False        
       
         # Keep same start state as in game simulation
-        state = 30635;
         # select random state
-        #state = random.randint(0, env.num_states-1);
+        state = random.randint(0, env.num_states-1);
         while (not stateValid(state,env)):
             state = random.randint(0, env.num_states-1)
-        
+
         convSteps = 0;
         # run inner loop for each episode until a terminal state has been reached
         while not converged:
-            #game.update(); # update graphics
-            #time.sleep(0.5);
+            if (episodes>1000):
+                game.update(); # update graphics
+                time.sleep(0.5);
 
             #print('Q learning, step ', steps, '...')
             
@@ -105,7 +103,8 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
             #converged = env.P[next_state][action][0][3]
             converged = done;
             pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = env.state2coord(next_state);
-            #game.updateState(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, 2)
+            if episodes > 1000:
+                game.updateState(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, 2)
 
         #print("Episode",t,"converged at", convSteps);
     # extract optimal policy after calculating optimal V
@@ -115,7 +114,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 if __name__ == '__main__':
     # Init
-    eps = 100000;
+    eps = 1000;
     game = Game();
     env = PacmanEnv(num_ghosts=2, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid, createP=False);
     policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.1, episodes=eps)
@@ -126,6 +125,7 @@ if __name__ == '__main__':
     ghost_x = [2, 3];
     ghost_y = [5, 1];
     state = env.coord2state(pacman_x, pacman_y, ghost_x, ghost_y);
+    state = 46910
     print(Q[state])
     print(policy[state])
     # Write policy to file
