@@ -33,12 +33,12 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 num_ghosts = 1;
 grid_len = 5;
 #f = open("valueIter_Chase.txt",'r');
-#f = open("valueIter_Chase.txt",'r');
+f = open("valueIter_Random.txt",'r');
 #f = open("policyIter_Chase.txt",'r');
 #f = open("policyIter_Random.txt",'r');
-f = open("qLearning_eps10000_Chase.txt",'r'); # change # episodes
-#f = open("qLearning_eps1000_Random.txt",'r'); # change # episodes
-ghostType = ['Chase'];
+#f = open("qLearning_eps10000_Chase.txt",'r'); # change # episodes
+f = open("qLearning_eps1000_Random.txt",'r'); # change # episodes
+ghostType = ['Random'];
 
 
 ###############################################################################
