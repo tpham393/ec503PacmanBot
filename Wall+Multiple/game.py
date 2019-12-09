@@ -18,6 +18,15 @@ class Game():
                 [True, False, True, True, True, False, True],
                 [True, False, False, False, False, False, True],
                 [True, True, True, True, True, True, True]];
+        '''
+        self.grid = [[True, True, True, True, True, True, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, False, False, False, False, False, True],
+                [True, True, True, True, True, True, True]];
+        '''
         width, height = 65*self.gridsize[0], 65*self.gridsize[1]+74
         self.screen = pygame.display.set_mode((width,height))
         pygame.display.set_caption("Game")

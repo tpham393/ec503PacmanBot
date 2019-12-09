@@ -39,12 +39,12 @@ def value_iteration(env, gamma):
         return action_values
     
     def extract_policy(V):
-        policy = np.zeros(env.num_states)
+        policy = [0]*env.num_states
         
         for s in range(env.num_states):
             action_values = calculate_action_values(s, V)
             best_action = np.argmax(action_values) # returns index of action that has maximum V
-            policy[s] = int(best_action); # deterministic optimal policy, i.e. always take best_action for given state
+            policy[s] = best_action; # deterministic optimal policy, i.e. always take best_action for given state
         
         return policy
     
@@ -61,38 +61,31 @@ def value_iteration(env, gamma):
             action_values = calculate_action_values(s, V)
             max_action_value = np.max(action_values)
             delta = max( delta, np.abs(max_action_value - V[s]) ) # the maximum difference between V'(s) and V(s) for all s
-            V[s] = max_action_value        
+            V[s] = max_action_value
         
         steps += 1
         
-        #print('Delta: ', delta)
+        print('Delta: ', delta)
         converged = (delta < theta)
         #print(converged)
     
     # extract optimal policy after calculating optimal V
     policy = extract_policy(V)
     
-    print('Completed algorithm')
+    print('Converged at', steps);
     return policy, V, steps
 
 if __name__ == '__main__':
     # Init
     col, row =7,7;
-    grid_len = 3;
     num_ghosts = 2;
     game = Game();
-    env = PacmanEnv(num_ghosts=num_ghosts, grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
-    policy, v, steps = value_iteration(env, gamma=0.25);
-
+    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
+    policy, v, steps = value_iteration(env, gamma=0.5);
 
     # Write policy to file
     filename = "valueIter_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(num_ghosts);
-    f = open(filename+".txt", "w");
+    f = open("valueIter.txt", "w");
     for val in policy:
       f.write(str(val)+'\n');
     f.close();
-
-    exit(0);
-
-    ###########################################################################
-    ###########################################################################

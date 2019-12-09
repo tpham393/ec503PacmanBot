@@ -82,7 +82,8 @@ def ghost_move(pacman_x, pacman_y, ghost_x, ghost_y, numGhosts, grid, ghost_type
 				else:
 					t_x[i] = ghost_x[i] - 1;
 			elif (ghost_type[i] == 'Chase'):
-				r = random.randint(1,2) # If there are two optimal moves allows it to randomly choose one
+				r = 1;
+				#r = random.randint(1,2) # If there are two optimal moves allows it to randomly choose one
 				if r == 1:
 					ghost_m = potentialMoves[distance.index(min(distance))]
 				else:

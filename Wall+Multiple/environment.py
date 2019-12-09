@@ -197,23 +197,25 @@ class PacmanEnv:
         rewards = []; # rewards for each next state
         done = []; # whether game is done for each next state
         probs = []; # transition probs for each next state
-        defaultProb = 1/math.pow(4,self.num_ghosts);
+        if 'chase' in self.ghost_type:
+            defaultProb = 1/4;
+        else:
+            defaultProb = 1/math.pow(4,self.num_ghosts);
 
         # Get currState coordinates
         pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(currState);
 
-        # Check whether current w/in bounds
+        # Check whether current state w/in bounds
         if (self.grid[pacmanLocY][pacmanLocX] == True):
+            return probs, nextStates, rewards, done;
+        # Check whether current state is in done state: eaten by ghost or eaten pellet
+        _, currStateDone = self.calculate_reward(pacmanLocX,pacmanLocY,ghostLocX,ghostLocY);
+        if (currStateDone):
             return probs, nextStates, rewards, done;
         # Get pacman location after performing action
         pacmanLocX_next, pacmanLocY_next = self.move(pacmanLocX, pacmanLocY, action);
 
         ## Get all possible ghost states
-        # Check whether current state is in done state: eaten by ghost or eaten pellet
-        _, currStateDone = self.calculate_reward(pacmanLocX,pacmanLocY,ghostLocX,ghostLocY);
-        if (currStateDone):
-            return probs, nextStates, rewards, done;
-
         # Get next location from chasing ghost
         t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
         chaseLocX, chaseLocY = t_x[0], t_y[0];
@@ -245,7 +247,28 @@ class PacmanEnv:
 
         return probs, nextStates, rewards, done;
 
-    def __init__(self, grid_len=3, num_ghosts=1, pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[]):
+    def nextMoveOne(self, state, pacmanAction, randGhostAction):
+        pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(state);
+        pacmanLocX_next, pacmanLocY_next = self.move(pacmanLocX, pacmanLocY, pacmanAction);
+        # Get next action for chasing ghost
+        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
+
+        chaseLocX, chaseLocY = t_x[0], t_y[0];
+        if (chaseLocX > ghostLocX[0]):
+            chaseGhostAction = RIGHT;
+        elif (chaseLocX < ghostLocX[0]):
+            chaseGhostAction = LEFT;
+        elif (chaseLocY > ghostLocY[0]):
+            chaseGhostAction = UP;
+        else:
+            chaseGhostAction = DOWN;
+        # Get next ghost location given chasing ghost's action <chaseGhostAction> and random ghost's action <randGhostAction>
+        ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [chaseGhostAction, randGhostAction]);
+        nextState = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
+        reward, done = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
+        return nextState, reward, done;
+
+    def __init__(self, grid_len=3, num_ghosts=1, ghost_type = ['random'], pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[], createP = True):
         self.num_ghosts = num_ghosts
         self.grid_len = grid_len;
         self.grid_size = grid_len*grid_len;
@@ -254,14 +277,17 @@ class PacmanEnv:
         self.winReward = winReward;
         self.loseReward = loseReward;
         self.grid = grid;
+        self.ghost_type = ghost_type;
 
-        self.P = {s : {a : [] for a in range(4)} for s in range(self.num_states)}
-            
-        # Calculate P[s][a]
-        for s in range(self.num_states):
-            for a in range(4):
-                pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(s);
-                probs, nextStates, rewards, done = self.nextMove(s, a);
-                self.P[s][a] = [[probs[i], nextStates[i], rewards[i], done[i]] for i in range(len(nextStates))];
+        
+        if createP:
+            self.P = {s : {a : [] for a in range(4)} for s in range(self.num_states)}
+                
+            # Calculate P[s][a]
+            for s in range(self.num_states):
+                for a in range(4):
+                    pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(s);
+                    probs, nextStates, rewards, done = self.nextMove(s, a);
+                    self.P[s][a] = [[probs[i], nextStates[i], rewards[i], done[i]] for i in range(len(nextStates))];
 
         

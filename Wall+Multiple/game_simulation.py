@@ -33,7 +33,11 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 col, row = (7,7); 
 num_ghosts = 2;
 grid_len = 7;
-f = open("valueIter_grid7x7_ghosts2.txt",'r');
+#f = open("valueIter.txt",'r');
+#f = open("policyIter.txt",'r');
+f = open("qLearning_eps100000.txt",'r');
+
+
 ##################################################
 policy = [];
 line = f.readline();
