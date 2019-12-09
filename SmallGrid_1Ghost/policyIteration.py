@@ -47,7 +47,7 @@ def policyEvaluation(policy, v, env):
             delta = max(delta, abs(v[state]-vStateOld));
         #print("Delta",delta);
         cnt += 1;
-    print("Policy evalulation converged at", cnt);
+    print("Policy evaluation converged at", cnt);
     return v;
 
 
@@ -91,16 +91,17 @@ def policyIteration(env):
     return policy, v, policyIter;
 
 if __name__ == '__main__':
+    ########################### Change the following ##########################
+    ghostType = 'Chase' # 'Chase' or 'Random'
+    ###########################################################################
+
     # Init
-    col, row =7,7;
-    num_ghosts = 2;
-    game = Game(7,7);
-    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
+    game = Game();
+    env = PacmanEnv(num_ghosts=1, ghost_type=[ghostType], grid_len=5, pellet_x=3, pellet_y=1, grid=game.grid);
     policy, v, policyIter = policyIteration(env);
 
-
     # Write policy to file
-    f = open("policyIter.txt", "w");
+    f = open("policyIter_"+ghostType+".txt", "w");
     for val in policy:
       f.write(str(val)+'\n');
     f.close();

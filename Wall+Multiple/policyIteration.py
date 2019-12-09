@@ -95,7 +95,7 @@ if __name__ == '__main__':
     col, row =7,7;
     num_ghosts = 2;
     game = Game(7,7);
-    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
+    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['Chase','Random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
     policy, v, policyIter = policyIteration(env);
 
 

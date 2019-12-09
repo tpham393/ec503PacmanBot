@@ -48,6 +48,8 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
         for i in range(env.num_ghosts):
             if (env.grid[ghostLocY[i]][ghostLocX[i]] == True):
                 return False;
+        if pacmanLocX==env.pellet_x and pacmanLocY==env.pellet_y:
+            return False;
         return True;
 
     def extract_policy(Q):
@@ -64,6 +66,8 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
     steps = 0
     
     metStates = [];
+    #initAlpha = 1
+    #minAlpha = 0.005;
     for t in range(episodes):
         converged = False        
       
@@ -73,24 +77,20 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
         while (not stateValid(state,env)):
             state = random.randint(0, env.num_states-1)
 
-        #state = 30635;
         convSteps = 0;
         # run inner loop for each episode until a terminal state has been reached
-        initialEps = 1;
-        minEps = 1e-3;
-        eps_i = 0;
+        #max(minAlpha, initAlpha * (0.85 ** (t//100)))
+
         while not converged:
             metStates.append(state);
 
-            #if (episodes>1000):
+            #if (t>8000):
             #    game.update(); # update graphics
-            #    time.sleep(0.5);
+            #    time.sleep(2.6);
 
             #print('Q learning, step ', steps, '...')
             
             # select action
-            epsilon = max(minEps, initialEps * (0.85 ** (eps_i//100)))
-            eps_i += 1;
             if random.uniform(0, 1) < epsilon:
                 action = random.randint(0,3) # exploration
             else:
@@ -98,10 +98,8 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
                 #print('exploit action: ', action)
 
             next_state, reward, done = env.nextMoveOne(state, action);   
-
             # in next state, select action with highest Q-value
             max_next_action_value = np.max(Q[next_state, :])
-
             Q[state][action] = (1-alpha)*Q[state][action] + (alpha*(reward + (gamma * max_next_action_value)));
             # set next state as current state & repeat
             state = next_state 
@@ -110,10 +108,11 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
             # if reached terminal state (i.e. next state = terminal state), converged = True
             #converged = env.P[next_state][action][0][3]
             converged = done;
-            pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = env.state2coord(next_state);
-            #if episodes > 1000:
-            #    game.updateState(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, 2, ['Chase', 'Random'])
-
+            #if t > 5000:
+            #    pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = env.state2coord(next_state);
+            #    game.updateState(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, 1, env.ghost_type)
+        #if t>8000:
+        #    print("converged", reward)
         #print("Episode",t,"converged at", convSteps);
     # extract optimal policy after calculating optimal V
 
@@ -124,15 +123,17 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 
 if __name__ == '__main__':
-    # Init
+    ######################### Change this #####################################
     eps = 1000;
+    ghostType = 'Random';
+    ###########################################################################
+    # Init
     game = Game();
-    env = PacmanEnv(num_ghosts=1, ghost_type=['Random'], grid_len=5, pellet_x=3, pellet_y=3, grid=game.grid, createP=False);
-    policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=eps)
+    env = PacmanEnv(num_ghosts=1, ghost_type=[ghostType], grid_len=5, pellet_x=3, pellet_y=1, grid=game.grid, createP=False);
+    policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.1, episodes=eps)
 
-    
     # Write policy to file
-    f = open("qLearning_eps"+str(eps)+".txt", "w");
+    f = open("qLearning_eps"+str(eps)+"_"+ghostType+".txt", "w");
     for val in policy:
       f.write(str(val)+'\n');
     f.close();

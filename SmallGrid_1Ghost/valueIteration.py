@@ -54,7 +54,7 @@ def value_iteration(env, gamma):
     steps = 0
     
     # iteratively calculate optimal V
-    while ~converged:
+    while not converged:
         # print('Value iteration, step ', steps, '...')
         delta = 0
         for s in range(env.num_states):
@@ -67,7 +67,6 @@ def value_iteration(env, gamma):
         
         print('Delta: ', delta)
         converged = (delta < theta)
-        #print(converged)
     
     # extract optimal policy after calculating optimal V
     policy = extract_policy(V)
@@ -76,16 +75,17 @@ def value_iteration(env, gamma):
     return policy, V, steps
 
 if __name__ == '__main__':
+    ########################### Change the following ##########################
+    ghostType = 'Chase' # 'Chase' or 'Random'
+    ###########################################################################
     # Init
-    col, row =7,7;
-    num_ghosts = 2;
-    game = Game(7,7);
-    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
+    num_ghosts = 1;
+    game = Game()
+    env = PacmanEnv(num_ghosts=1, ghost_type=[ghostType], grid_len=5, pellet_x=3, pellet_y=1, grid=game.grid);
     policy, v, steps = value_iteration(env, gamma=0.5);
 
     # Write policy to file
-    filename = "valueIter_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(num_ghosts);
-    f = open("valueIter.txt", "w");
+    f = open("valueIter_"+ghostType+".txt", "w");
     for val in policy:
       f.write(str(val)+'\n');
     f.close();

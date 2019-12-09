@@ -170,7 +170,7 @@ def game_func(move, pacman_x, pacman_y, ghost_x, ghost_y, goal_x, goal_y, grid, 
 	# Move ghost if pacman was not eaten by pacman move
 	t_x = ghost_x;
 	t_y = ghost_y;
-	t_x, t_y = ghost_move(pacman_x, pacman_y, ghost_x, ghost_y, numGhosts, grid, ghost_type);
+	t_x, t_y = ghost_move(prevPacman_x, prevPacman_y, ghost_x, ghost_y, numGhosts, grid, ghost_type);
 	
 	# Check if game has ended or won
 	ended, won = gameStatus(pacman_x, pacman_y, t_x, t_y, goal_x, goal_y);

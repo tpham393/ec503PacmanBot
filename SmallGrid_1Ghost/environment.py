@@ -1,6 +1,5 @@
 import math
 from game_funcs import ghost_move
-import random
 
 UP = 2
 DOWN = 0
@@ -198,7 +197,7 @@ class PacmanEnv:
         rewards = []; # rewards for each next state
         done = []; # whether game is done for each next state
         probs = []; # transition probs for each next state
-        if 'chase' in self.ghost_type:
+        if 'Chase' in self.ghost_type:
             defaultProb = 1;
         else:
             defaultProb = 1/4;
@@ -218,14 +217,19 @@ class PacmanEnv:
 
         ## Get all possible ghost states
         # Get next location from chasing ghost
-        if 'chase' in self.ghost_type:
-            t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
-            ghostLocX_next, ghostLocY_next = t_x[0], t_y[0];
-            state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
-            nextStates.append(state);
-            reward, doneStatus = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, [ghostLocX_next], [ghostLocY_next]);
-            rewards.append(reward);
-            done.append(doneStatus);
+        if 'Chase' in self.ghost_type:
+            t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, self.ghost_type);
+            if (not self.moveThrough(pacmanLocX_next, pacmanLocY_next, pacmanLocX, pacmanLocY, t_x, t_y, ghostLocX, ghostLocY)):
+                state = self.coord2state(pacmanLocX_next, pacmanLocY_next, t_x, t_y);
+                nextStates.append(state);
+                reward, doneStatus = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, t_x, t_y);
+                rewards.append(reward);
+                done.append(doneStatus);
+            else:
+                state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX, ghostLocY);
+                nextStates.append(state);
+                rewards.append(self.loseReward);
+                done.append(True);
             probs.append(defaultProb);
         else:
             for i in range(4): # need to be hardcoded, <numGhosts> number of loops
@@ -249,15 +253,20 @@ class PacmanEnv:
 
     def nextMoveOne(self, state, pacmanAction):
         pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(state);
+        # Move pacman
         pacmanLocX_next, pacmanLocY_next = self.move(pacmanLocX, pacmanLocY, pacmanAction);
         # Get next action for chasing ghost
         t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, self.ghost_type);
-        ghostLocX_next, ghostLocY_next = t_x[0], t_y[0];
-        nextState = self.coord2state(pacmanLocX_next, pacmanLocY_next, [ghostLocX_next], [ghostLocY_next]);
-        reward, done = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, [ghostLocX_next], [ghostLocY_next]);
+        if (not self.moveThrough(pacmanLocX_next, pacmanLocY_next, pacmanLocX, pacmanLocY, t_x, t_y, ghostLocX, ghostLocY)):
+            nextState = self.coord2state(pacmanLocX_next, pacmanLocY_next, t_x, t_y);
+            reward, done = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, t_x, t_y);
+        else:
+            nextState = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX, ghostLocY);
+            reward = self.loseReward;
+            done = True;
         return nextState, reward, done;
 
-    def __init__(self, grid_len=3, num_ghosts=1, ghost_type = ['random'], pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[], createP = True):
+    def __init__(self, grid_len=3, num_ghosts=1, ghost_type = ['Random'], pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[], createP = True):
         self.num_ghosts = num_ghosts
         self.grid_len = grid_len;
         self.grid_size = grid_len*grid_len;

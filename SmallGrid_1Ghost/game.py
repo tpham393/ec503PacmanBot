@@ -26,7 +26,7 @@ class Game():
         self.ghost_x = [];
         self.ghost_y = [];
         self.ghost_type = ['Chase', 'Random'];
-        self.goal_x, self.goal_y = 3,3;
+        self.goal_x, self.goal_y = 3,1;
         self.moves = [];
         self.pacman = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
         self.ghost = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]

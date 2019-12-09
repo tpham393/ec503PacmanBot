@@ -6,7 +6,8 @@ from random import randint as ri
 import threading
 
 class Game():
-    def __init__(self,gridX,gridY):
+    def __init__(self):
+        gridX, gridY = 7, 7;
         pass
         pygame.init()
         pygame.font.init()
