@@ -45,7 +45,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
         if (env.grid[pacmanLocY][pacmanLocX] == True):
             return False;
-        for i in range(2):
+        for i in range(env.num_ghosts):
             if (env.grid[ghostLocY[i]][ghostLocX[i]] == True):
                 return False;
         return True;
@@ -97,9 +97,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
                 action = np.argmax(Q[state, :]) # exploitation
                 #print('exploit action: ', action)
 
-            ghost_mvmt = random.randint(0,3) # simulate random movement for the random ghost
-
-            next_state, reward, done = env.nextMoveOne(state, action, ghost_mvmt);   
+            next_state, reward, done = env.nextMoveOne(state, action);   
 
             # in next state, select action with highest Q-value
             max_next_action_value = np.max(Q[next_state, :])
@@ -127,20 +125,12 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 if __name__ == '__main__':
     # Init
-    eps = 1000000;
-    game = Game(7,7);
-    env = PacmanEnv(num_ghosts=2, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid, createP=False);
+    eps = 1000;
+    game = Game();
+    env = PacmanEnv(num_ghosts=1, ghost_type=['Random'], grid_len=5, pellet_x=3, pellet_y=3, grid=game.grid, createP=False);
     policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=eps)
 
-
-    ###########################3
-    pacman_x,pacman_y = 5,1;
-    ghost_x = [2, 3];
-    ghost_y = [5, 1];
-    state = env.coord2state(pacman_x, pacman_y, ghost_x, ghost_y);
-    state = 46910
-    print(Q[state])
-    print(policy[state])
+    
     # Write policy to file
     f = open("qLearning_eps"+str(eps)+".txt", "w");
     for val in policy:

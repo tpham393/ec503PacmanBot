@@ -1,6 +1,6 @@
 import math
 from game_funcs import ghost_move
-import numpy
+import random
 
 UP = 2
 DOWN = 0
@@ -199,9 +199,9 @@ class PacmanEnv:
         done = []; # whether game is done for each next state
         probs = []; # transition probs for each next state
         if 'chase' in self.ghost_type:
-            defaultProb = 1/4;
+            defaultProb = 1;
         else:
-            defaultProb = 1/math.pow(4,self.num_ghosts);
+            defaultProb = 1/4;
 
         # Get currState coordinates
         pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(currState);
@@ -218,55 +218,43 @@ class PacmanEnv:
 
         ## Get all possible ghost states
         # Get next location from chasing ghost
-        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
-        chaseLocX, chaseLocY = t_x[0], t_y[0];
-        if (chaseLocX > ghostLocX[0]):
-            chaseGhostAction = RIGHT;
-        elif (chaseLocX < ghostLocX[0]):
-            chaseGhostAction = LEFT;
-        elif (chaseLocY > ghostLocY[0]):
-            chaseGhostAction = UP;
-        else:
-            chaseGhostAction = DOWN;
-
-        for i in range(4): # need to be hardcoded, <numGhosts> number of loops
-            # Get ghost next location given action
-            ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [chaseGhostAction, i]);
-            # if pacman not moving through ghost
-            if (not self.moveThrough(pacmanLocX_next, pacmanLocY_next, pacmanLocX, pacmanLocY, ghostLocX_next, ghostLocY_next, ghostLocX, ghostLocY)):
-                state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
-                nextStates.append(state);
-                reward, doneStatus = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
-                rewards.append(reward);
-                done.append(doneStatus);
-            else: # if pacman moving through ghost, set pacman as new state and keep old ghost states so pacman and ghost overlaps and game ends
-                state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX, ghostLocY);
-                nextStates.append(state);
-                rewards.append(self.loseReward);
-                done.append(True);
+        if 'chase' in self.ghost_type:
+            t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
+            ghostLocX_next, ghostLocY_next = t_x[0], t_y[0];
+            state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
+            nextStates.append(state);
+            reward, doneStatus = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, [ghostLocX_next], [ghostLocY_next]);
+            rewards.append(reward);
+            done.append(doneStatus);
             probs.append(defaultProb);
+        else:
+            for i in range(4): # need to be hardcoded, <numGhosts> number of loops
+                # Get ghost next location given action
+                ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [i]);
+                # if pacman not moving through ghost
+                if (not self.moveThrough(pacmanLocX_next, pacmanLocY_next, pacmanLocX, pacmanLocY, ghostLocX_next, ghostLocY_next, ghostLocX, ghostLocY)):
+                    state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
+                    nextStates.append(state);
+                    reward, doneStatus = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
+                    rewards.append(reward);
+                    done.append(doneStatus);
+                else: # if pacman moving through ghost, set pacman as new state and keep old ghost states so pacman and ghost overlaps and game ends
+                    state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX, ghostLocY);
+                    nextStates.append(state);
+                    rewards.append(self.loseReward);
+                    done.append(True);
+                probs.append(defaultProb);
 
         return probs, nextStates, rewards, done;
 
-    def nextMoveOne(self, state, pacmanAction, randGhostAction):
+    def nextMoveOne(self, state, pacmanAction):
         pacmanLocX,pacmanLocY,ghostLocX,ghostLocY = self.state2coord(state);
         pacmanLocX_next, pacmanLocY_next = self.move(pacmanLocX, pacmanLocY, pacmanAction);
         # Get next action for chasing ghost
-        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
-
-        chaseLocX, chaseLocY = t_x[0], t_y[0];
-        if (chaseLocX > ghostLocX[0]):
-            chaseGhostAction = RIGHT;
-        elif (chaseLocX < ghostLocX[0]):
-            chaseGhostAction = LEFT;
-        elif (chaseLocY > ghostLocY[0]):
-            chaseGhostAction = UP;
-        else:
-            chaseGhostAction = DOWN;
-        # Get next ghost location given chasing ghost's action <chaseGhostAction> and random ghost's action <randGhostAction>
-        ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [chaseGhostAction, randGhostAction]);
-        nextState = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
-        reward, done = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);
+        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, self.ghost_type);
+        ghostLocX_next, ghostLocY_next = t_x[0], t_y[0];
+        nextState = self.coord2state(pacmanLocX_next, pacmanLocY_next, [ghostLocX_next], [ghostLocY_next]);
+        reward, done = self.calculate_reward(pacmanLocX_next, pacmanLocY_next, [ghostLocX_next], [ghostLocY_next]);
         return nextState, reward, done;
 
     def __init__(self, grid_len=3, num_ghosts=1, ghost_type = ['random'], pellet_x=2, pellet_y=0, winReward=1000, loseReward=-1000, grid=[], createP = True):

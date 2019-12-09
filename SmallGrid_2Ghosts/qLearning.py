@@ -127,20 +127,12 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 if __name__ == '__main__':
     # Init
-    eps = 1000000;
-    game = Game(7,7);
-    env = PacmanEnv(num_ghosts=2, ghost_type=['chase','random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid, createP=False);
+    eps = 1000;
+    game = Game();
+    env = PacmanEnv(num_ghosts=2, ghost_type=['chase','random'], grid_len=3, pellet_x=3, pellet_y=3, grid=game.grid, createP=False);
     policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=eps)
 
-
-    ###########################3
-    pacman_x,pacman_y = 5,1;
-    ghost_x = [2, 3];
-    ghost_y = [5, 1];
-    state = env.coord2state(pacman_x, pacman_y, ghost_x, ghost_y);
-    state = 46910
-    print(Q[state])
-    print(policy[state])
+    
     # Write policy to file
     f = open("qLearning_eps"+str(eps)+".txt", "w");
     for val in policy:

@@ -30,12 +30,11 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 
 
 ##########3 Change the following before running
-col, row = (7,7); 
 num_ghosts = 2;
-grid_len = 7;
+grid_len = 3;
 #f = open("valueIter.txt",'r');
 #f = open("policyIter.txt",'r');
-f = open("qLearning_eps1000000.txt",'r');
+f = open("qLearning_eps1000.txt",'r');
 
 
 ##################################################
@@ -49,12 +48,12 @@ while line:
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
-game = Game(7,7);    
+game = Game();    
 
 ghostType = ['Chase','Random'];
-pacman_x,pacman_y = 5,1;
-ghost_x = [2, 3];
-ghost_y = [5, 1];
+pacman_x,pacman_y = 1,1;
+ghost_x = [1, 3];
+ghost_y = [3, 1];
 
 game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts, ghostType) # update internal grid
 

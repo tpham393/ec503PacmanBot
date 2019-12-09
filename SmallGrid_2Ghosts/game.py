@@ -6,27 +6,27 @@ from random import randint as ri
 import threading
 
 class Game():
-    def __init__(self,gridX,gridY):
+    def __init__(self):
         pass
         pygame.init()
         pygame.font.init()
+        gridX = 5;
+        gridY = 5;
         self.gridsize = [gridX,gridY];
-        self.grid = [[True, True, True, True, True, True, True],
-					[True, False, False, False, False, False, True],
-					[True, False, True, False, True, False, True],
-					[True, False, False, False, False, False, True],
-					[True, False, True, True, True, False, True],
-					[True, False, False, False, False, False, True],
-					[True, True, True, True, True, True, True]];
+        self.grid = [[True, True, True, True, True],
+                    [True, False, False, False, True],
+                    [True, False, False, False, True],
+                    [True, False, False, False, True],
+                    [True, True, True, True, True]];
    
         width, height = 65*self.gridsize[0], 65*self.gridsize[1]+74
         self.screen = pygame.display.set_mode((width,height))
         pygame.display.set_caption("Game")
-        self.pacman_x, self.pacman_y = 0, 2;
+        self.pacman_x, self.pacman_y = 1, 1;
         self.ghost_x = [];
         self.ghost_y = [];
         self.ghost_type = ['Chase', 'Random'];
-        self.goal_x, self.goal_y = 1, 5;
+        self.goal_x, self.goal_y = 3,3;
         self.moves = [];
         self.pacman = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
         self.ghost = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
@@ -143,3 +143,4 @@ class Game():
                     exit()
             pygame.display.flip()
         
+
