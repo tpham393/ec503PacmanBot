@@ -33,11 +33,13 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 num_ghosts = 2;
 grid_len = 7;
 #f = open("valueIter.txt",'r');
-#f = open("policyIter.txt",'r');
-f = open("qLearning_eps1000.txt",'r');
+f = open("policyIter.txt",'r');
+#f = open("qLearning_eps10000.txt",'r');
 
 
 ##################################################
+
+# Read policy from file
 policy = [];
 line = f.readline();
 while line:
