@@ -5,6 +5,7 @@ import game_funcs as g
 import math
 import pygame
 import sys
+import numpy as np
 
 def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_len):
     '''
@@ -51,23 +52,44 @@ while line:
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
+ghostType = ['Chase','Random'];
+
+pacman_x,pacman_y = 5,1;
+#ghost_x = [2, 3];
+#ghost_y = [5, 1];
+
 win_count = 0
 winning_steps = []
 
-for s in range(5): # run 50 simulations
-    game = Game();    
-    steps_to_win = 0
+for s in range(50): # run 50 simulations
+    game = Game();   
+    # Generate random ghost location 
+    ghost_x = [];
+    ghost_y = [];
+    num_ghosts = 2;
+    for i in range(num_ghosts):
+        locSet = False;
+        while not locSet:
+            xLoc = ri(1,5)
+            yLoc = ri(1,5)
+            if i==0 and [xLoc,yLoc]!=[pacman_x,pacman_y]:
+                ghost_x.append(xLoc);
+                ghost_y.append(yLoc);
+                locSet = True;
+            elif i == 1 and [xLoc,yLoc]!=[pacman_x,pacman_y] and [xLoc,yLoc]!=[ghost_x[0],ghost_y[0]]:
+                ghost_x.append(xLoc);
+                ghost_y.append(yLoc);
+                locSet = True;
 
-    ghostType = ['Chase','Random'];
-    pacman_x,pacman_y = 5,1;
-    ghost_x = [2, 3];
-    ghost_y = [5, 1];
+
+
+    steps_to_win = 0
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts, ghostType) # update internal grid
 
     ## Start game
     while not game.ended:
         game.update(); # update graphics
-        time.sleep(0.05);
+        time.sleep(0.04);
         # Get state (0 to numStates-1) from pacman and ghost coordinates
         state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, num_ghosts, grid_len);
         # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4

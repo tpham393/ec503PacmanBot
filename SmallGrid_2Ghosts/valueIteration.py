@@ -6,7 +6,7 @@ from random import randint as ri
 import time
 import numpy as np
 
-gamma = 0.25;
+gamma = 0.5;
 
 def value_iteration(env, gamma):
     '''

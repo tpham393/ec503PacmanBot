@@ -66,8 +66,8 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
     steps = 0
     
     metStates = [];
-    #initAlpha = 1
-    #minAlpha = 0.005;
+    initAlpha = 1
+    minAlpha = 0.005;
     for t in range(episodes):
         converged = False        
       
@@ -79,7 +79,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
         convSteps = 0;
         # run inner loop for each episode until a terminal state has been reached
-        #max(minAlpha, initAlpha * (0.85 ** (t//100)))
+        alpha = max(minAlpha, initAlpha * (0.85 ** (t//100)))
 
         while not converged:
             metStates.append(state);
@@ -124,7 +124,7 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 if __name__ == '__main__':
     ######################### Change this #####################################
-    eps = 100000;
+    eps = 1000;
     ghostType = ['Random','Random'];
     ###########################################################################
     # Init
