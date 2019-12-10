@@ -35,9 +35,9 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 ##########3 Change the following before running
 num_ghosts = 2;
 grid_len = 7;
-#f = open("valueIter.txt",'r');
+f = open("valueIter.txt",'r');
 #f = open("policyIter.txt",'r');
-f = open("qLearning_eps100000.txt",'r');
+#f = open("qLearning_eps10000.txt",'r');
 
 
 ##################################################
@@ -103,13 +103,13 @@ pacman_x,pacman_y = 5,1;
 win_count = 0
 winning_steps = []
 
-for s in range(100): # run 50 simulations
+for s in range(1): # run 50 simulations
     print(s);
 
     # Get random ghost location
     ghost_x = all_ghost_x[s];
     ghost_y = all_ghost_y[s];
-
+    
     game = Game();    
     steps_to_win = 0
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts, ghostType) # update internal grid
@@ -117,7 +117,7 @@ for s in range(100): # run 50 simulations
     ## Start game
     while not game.ended:
         game.update(); # update graphics
-        #time.sleep(0.5);
+        time.sleep(0.5);
         # Get state (0 to numStates-1) from pacman and ghost coordinates
         state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, num_ghosts, grid_len);
         # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4

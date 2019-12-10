@@ -80,7 +80,7 @@ if __name__ == '__main__':
     num_ghosts = 2;
     game = Game();
     env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['Random','Chase'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
-    policy, v, steps = value_iteration(env, gamma=0.75);
+    policy, v, steps = value_iteration(env, gamma=0.9);
 
     # Write policy to file
     filename = "valueIter_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(num_ghosts);
