@@ -6,6 +6,7 @@ import math
 import pygame
 import sys
 import numpy as np
+import re
 
 def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_len):
     '''
@@ -49,26 +50,47 @@ while line:
     policy.append(int(line));
     line = f.readline();
 
+
+# Create ghost locations
+# Get ghost locations
+f = open("ghostLocs.txt","r");
+line = f.readline();
+all_ghost_x = [];
+all_ghost_y = [];
+while line:
+    line = line[0:-1];
+    ghostx0, ghostx1, ghosty0, ghosty1 = re.split(' ',line);
+    ghostLocX = [int(ghostx0),int(ghostx1)];
+    ghostLocY = [int(ghosty0), int(ghosty1)];
+    all_ghost_x.append(ghostLocX);
+    all_ghost_y.append(ghostLocY);
+    line = f.readline();
+
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
+ghostType = ['Chase','Random'];
+
+pacman_x,pacman_y = 5,1;
+#ghost_x = [2, 3];
+#ghost_y = [5, 1];
+
 win_count = 0
 winning_steps = []
 
-for s in range(50): # run 50 simulations
+for s in range(100): # run 50 simulations
+    # Get random ghost location
+    ghost_x = all_ghost_x[s];
+    ghost_y = all_ghost_y[s];
+
     game = Game();    
     steps_to_win = 0
-
-    ghostType = ['Chase','Random'];
-    pacman_x,pacman_y = 5,1;
-    ghost_x = [2, 3];
-    ghost_y = [5, 1];
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts, ghostType) # update internal grid
 
     ## Start game
     while not game.ended:
         game.update(); # update graphics
-        time.sleep(0.05);
+        time.sleep(0.04);
         # Get state (0 to numStates-1) from pacman and ghost coordinates
         state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, num_ghosts, grid_len);
         # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4

@@ -134,12 +134,12 @@ class Game():
         pygame.display.flip()
         filen = 'ss_' + str(self.s_num) + '.png';
         pygame.image.save(self.screen,filen)
-        time.sleep(1)
-        exit()
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit()
-            pygame.display.flip()
+        time.sleep(0.4)
+        #exit()
+        #while True:
+        #    for event in pygame.event.get():
+        #        if event.type == pygame.QUIT:
+        #            exit()
+        #    pygame.display.flip()
         
 
