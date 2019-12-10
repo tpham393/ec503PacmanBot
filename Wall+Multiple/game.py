@@ -133,9 +133,9 @@ class Game():
         self.screen.fill(0)
         self.drawBoard()
         self.drawHUD()
+        pygame.display.flip()
         filen = 'ss_' + str(self.s_num) + '.png';
         pygame.image.save(self.screen,filen)
-        pygame.display.flip()
         time.sleep(1)
         exit()
         while True:
