@@ -5,6 +5,7 @@ import game_funcs as g
 import math
 import pygame
 import sys
+import numpy as np
 
 def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_len):
     '''
@@ -33,9 +34,9 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 ##########3 Change the following before running
 num_ghosts = 2;
 grid_len = 7;
-#f = open("valueIter.txt",'r');
+f = open("valueIter.txt",'r');
 #f = open("policyIter.txt",'r');
-f = open("qLearning_eps1000000.txt",'r');
+#f = open("qLearning_eps1000000.txt",'r');
 
 
 ##################################################
@@ -54,7 +55,7 @@ while line:
 win_count = 0
 winning_steps = []
 
-for s in range(5): # run 50 simulations
+for s in range(50): # run 50 simulations
     game = Game();    
     steps_to_win = 0
 
