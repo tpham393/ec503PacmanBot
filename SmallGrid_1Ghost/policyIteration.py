@@ -8,7 +8,7 @@ import numpy as np
 
 
 # Initial game parameters
-gamma = 0.25;
+gamma = 0.5;
 '''
 numGhosts = 2;
 
@@ -92,7 +92,7 @@ def policyIteration(env):
 
 if __name__ == '__main__':
     ########################### Change the following ##########################
-    ghostType = 'Chase' # 'Chase' or 'Random'
+    ghostType = 'Random' # 'Chase' or 'Random'
     ###########################################################################
 
     # Init

@@ -103,7 +103,7 @@ pacman_x,pacman_y = 5,1;
 win_count = 0
 winning_steps = []
 
-for s in range(1): # run 50 simulations
+for s in range(100): # run 100 simulations
     print(s);
 
     # Get random ghost location

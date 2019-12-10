@@ -25,7 +25,7 @@ class Game():
         self.pacman_x, self.pacman_y = 1, 1;
         self.ghost_x = [];
         self.ghost_y = [];
-        self.ghost_type = ['Chase', 'Random'];
+        self.ghost_type = ['Random'];
         self.goal_x, self.goal_y = 3,1;
         self.moves = [];
         self.pacman = [[False for x in range(self.gridsize[0])] for y in range(self.gridsize[1])]
@@ -134,12 +134,12 @@ class Game():
         pygame.display.flip()
         filen = 'ss_' + str(self.s_num) + '.png';
         pygame.image.save(self.screen,filen)
-        time.sleep(1)
-        exit()
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit()
-            pygame.display.flip()
+        time.sleep(0.05);
+        #exit()
+        #while True:
+        #    for event in pygame.event.get():
+        #        if event.type == pygame.QUIT:
+        #            exit()
+        #    pygame.display.flip()
         
 
