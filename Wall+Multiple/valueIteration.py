@@ -6,7 +6,6 @@ from random import randint as ri
 import time
 import numpy as np
 
-gamma = 0.25;
 
 def value_iteration(env, gamma):
     '''
@@ -80,8 +79,8 @@ if __name__ == '__main__':
     col, row =7,7;
     num_ghosts = 2;
     game = Game();
-    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['Chase','Random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
-    policy, v, steps = value_iteration(env, gamma=0.5);
+    env = PacmanEnv(num_ghosts=num_ghosts, ghost_type=['Random','Chase'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid);
+    policy, v, steps = value_iteration(env, gamma=0.75);
 
     # Write policy to file
     filename = "valueIter_"+"grid"+str(col)+"x"+str(row)+"_ghosts"+str(num_ghosts);

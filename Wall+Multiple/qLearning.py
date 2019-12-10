@@ -129,9 +129,9 @@ def q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=5):
 
 if __name__ == '__main__':
     # Init
-    eps = 100000;
+    eps = 1000;
     game = Game();
-    env = PacmanEnv(num_ghosts=2, ghost_type=['Chase','Random'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid, createP=False);
+    env = PacmanEnv(num_ghosts=2, ghost_type=['Random','Chase'], grid_len=7, pellet_x=1, pellet_y=5, grid=game.grid, createP=False);
     policy, Q, steps = q_learning(env, gamma=0.9, alpha=0.9, epsilon=0.25, episodes=eps)
 
 

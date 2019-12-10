@@ -217,20 +217,20 @@ class PacmanEnv:
 
         ## Get all possible ghost states
         # Get next location from chasing ghost
-        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Chase','Random']);
-        chaseLocX, chaseLocY = t_x[0], t_y[0];
-        if (chaseLocX > ghostLocX[0]):
+        t_x, t_y = ghost_move(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, self.num_ghosts, self.grid, ['Random','Chase']);
+        chaseLocX, chaseLocY = t_x[1], t_y[1];
+        if (chaseLocX > ghostLocX[1]):
             chaseGhostAction = RIGHT;
-        elif (chaseLocX < ghostLocX[0]):
+        elif (chaseLocX < ghostLocX[1]):
             chaseGhostAction = LEFT;
-        elif (chaseLocY > ghostLocY[0]):
+        elif (chaseLocY > ghostLocY[1]):
             chaseGhostAction = UP;
         else:
             chaseGhostAction = DOWN;
 
         for i in range(4): # need to be hardcoded, <numGhosts> number of loops
             # Get ghost next location given action
-            ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [chaseGhostAction, i]);
+            ghostLocX_next, ghostLocY_next = self.evalGhostAction(ghostLocX, ghostLocY, [i, chaseGhostAction]);
             # if pacman not moving through ghost
             if (not self.moveThrough(pacmanLocX_next, pacmanLocY_next, pacmanLocX, pacmanLocY, ghostLocX_next, ghostLocY_next, ghostLocX, ghostLocY)):
                 state = self.coord2state(pacmanLocX_next, pacmanLocY_next, ghostLocX_next, ghostLocY_next);

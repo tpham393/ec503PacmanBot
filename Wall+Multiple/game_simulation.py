@@ -35,9 +35,9 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 ##########3 Change the following before running
 num_ghosts = 2;
 grid_len = 7;
-f = open("valueIter.txt",'r');
+#f = open("valueIter.txt",'r');
 #f = open("policyIter.txt",'r');
-#f = open("qLearning_eps1000000.txt",'r');
+f = open("qLearning_eps100000.txt",'r');
 
 
 ##################################################
@@ -50,8 +50,33 @@ while line:
     policy.append(int(line));
     line = f.readline();
 
-
+'''
 # Create ghost locations
+pacman_x,pacman_y = 5,1;
+game = Game();
+f = open("ghostLocs.txt","w");
+for s in range(100):
+    ghost_x = [];
+    ghost_y = [];
+    num_ghosts = 2;
+    for i in range(num_ghosts):
+        locSet = False;
+        while not locSet:
+            xLoc = ri(1,5)
+            yLoc = ri(1,5)
+            if (game.grid[yLoc][xLoc]==True):
+                continue;
+            if i==0 and [xLoc,yLoc]!=[pacman_x,pacman_y]:
+                ghost_x.append(xLoc);
+                ghost_y.append(yLoc);
+                locSet = True;
+            elif i == 1 and [xLoc,yLoc]!=[pacman_x,pacman_y] and [xLoc,yLoc]!=[ghost_x[0],ghost_y[0]]:
+                ghost_x.append(xLoc);
+                ghost_y.append(yLoc);
+                locSet = True;
+    f.write(str(ghost_x[0])+" "+str(ghost_x[1])+" "+str(ghost_y[0])+" "+str(ghost_y[1])+"\n")
+f.close();
+'''
 # Get ghost locations
 f = open("ghostLocs.txt","r");
 line = f.readline();
@@ -69,7 +94,7 @@ while line:
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
-ghostType = ['Chase','Random'];
+ghostType = ['Random','Chase'];
 
 pacman_x,pacman_y = 5,1;
 #ghost_x = [2, 3];
@@ -79,6 +104,8 @@ win_count = 0
 winning_steps = []
 
 for s in range(100): # run 50 simulations
+    print(s);
+
     # Get random ghost location
     ghost_x = all_ghost_x[s];
     ghost_y = all_ghost_y[s];
@@ -90,7 +117,7 @@ for s in range(100): # run 50 simulations
     ## Start game
     while not game.ended:
         game.update(); # update graphics
-        time.sleep(0.04);
+        #time.sleep(0.5);
         # Get state (0 to numStates-1) from pacman and ghost coordinates
         state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, num_ghosts, grid_len);
         # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4
@@ -109,6 +136,7 @@ for s in range(100): # run 50 simulations
         winning_steps.append(steps_to_win) # does not add to list if game is lost
 
 print('Total # of wins: ', win_count)
+print(winning_steps)
 print('Average # steps to win: ', np.mean(winning_steps))
 pygame.display.quit()
 pygame.quit()
