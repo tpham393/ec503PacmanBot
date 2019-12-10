@@ -34,9 +34,9 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 ##########3 Change the following before running
 num_ghosts = 2;
 grid_len = 7;
-#f = open("valueIter.txt",'r');
+f = open("valueIter.txt",'r');
 #f = open("policyIter.txt",'r');
-f = open("qLearning_eps1000000.txt",'r');
+#f = open("qLearning_eps1000000.txt",'r');
 
 
 ##################################################
@@ -62,6 +62,7 @@ win_count = 0
 winning_steps = []
 
 for s in range(50): # run 50 simulations
+<<<<<<< HEAD
     game = Game();   
     # Generate random ghost location 
     ghost_x = [];
@@ -80,6 +81,10 @@ for s in range(50): # run 50 simulations
                 ghost_x.append(xLoc);
                 ghost_y.append(yLoc);
                 locSet = True;
+=======
+    game = Game();    
+    steps_to_win = 0
+>>>>>>> 94dc958faa8caf0f1fbb1287e9122f5af3e1f7a0
 
 
 
