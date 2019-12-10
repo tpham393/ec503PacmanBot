@@ -32,8 +32,8 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 ##########3 Change the following before running
 num_ghosts = 2;
 grid_len = 7;
-#f = open("valueIter.txt",'r');
-f = open("policyIter.txt",'r');
+f = open("valueIter.txt",'r');
+#f = open("policyIter.txt",'r');
 #f = open("qLearning_eps10000.txt",'r');
 
 

@@ -129,12 +129,12 @@ class Game():
             self.end()
      
     def end(self):
-        filen = 'ss_' + str(self.s_num) + '.png';
-        #pygame.image.save(self.screen,filen)
         self.s_num = self.s_num + 1;
         self.screen.fill(0)
         self.drawBoard()
         self.drawHUD()
+        filen = 'ss_' + str(self.s_num) + '.png';
+        pygame.image.save(self.screen,filen)
         pygame.display.flip()
         time.sleep(1)
         exit()
