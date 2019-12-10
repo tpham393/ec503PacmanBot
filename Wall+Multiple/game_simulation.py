@@ -6,6 +6,7 @@ import math
 import pygame
 import sys
 import numpy as np
+import re
 
 def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_len):
     '''
@@ -49,6 +50,22 @@ while line:
     policy.append(int(line));
     line = f.readline();
 
+
+# Create ghost locations
+# Get ghost locations
+f = open("ghostLocs.txt","r");
+line = f.readline();
+all_ghost_x = [];
+all_ghost_y = [];
+while line:
+    line = line[0:-1];
+    ghostx0, ghostx1, ghosty0, ghosty1 = re.split(' ',line);
+    ghostLocX = [int(ghostx0),int(ghostx1)];
+    ghostLocY = [int(ghosty0), int(ghosty1)];
+    all_ghost_x.append(ghostLocX);
+    all_ghost_y.append(ghostLocY);
+    line = f.readline();
+
 ###############################################################################
 ############################  Game Simulation #################################
 ###############################################################################
@@ -61,33 +78,12 @@ pacman_x,pacman_y = 5,1;
 win_count = 0
 winning_steps = []
 
-for s in range(50): # run 50 simulations
-<<<<<<< HEAD
-    game = Game();   
-    # Generate random ghost location 
-    ghost_x = [];
-    ghost_y = [];
-    num_ghosts = 2;
-    for i in range(num_ghosts):
-        locSet = False;
-        while not locSet:
-            xLoc = ri(1,5)
-            yLoc = ri(1,5)
-            if i==0 and [xLoc,yLoc]!=[pacman_x,pacman_y]:
-                ghost_x.append(xLoc);
-                ghost_y.append(yLoc);
-                locSet = True;
-            elif i == 1 and [xLoc,yLoc]!=[pacman_x,pacman_y] and [xLoc,yLoc]!=[ghost_x[0],ghost_y[0]]:
-                ghost_x.append(xLoc);
-                ghost_y.append(yLoc);
-                locSet = True;
-=======
+for s in range(100): # run 50 simulations
+    # Get random ghost location
+    ghost_x = all_ghost_x[s];
+    ghost_y = all_ghost_y[s];
+
     game = Game();    
-    steps_to_win = 0
->>>>>>> 94dc958faa8caf0f1fbb1287e9122f5af3e1f7a0
-
-
-
     steps_to_win = 0
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts, ghostType) # update internal grid
 

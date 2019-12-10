@@ -35,8 +35,8 @@ def coord2state(pacmanLocX, pacmanLocY, ghostLocX, ghostLocY, num_ghosts, grid_l
 ########## Change the following before running ################################
 grid_len = 5;
 #f = open("valueIter_RandomX2.txt",'r');
-#f = open("policyIter_RandomX2.txt",'r');
-f = open("qLearning_eps1000_RandomX2.txt",'r'); # change # episodes
+f = open("policyIter_RandomX2.txt",'r');
+#f = open("qLearning_eps1000_RandomX2.txt",'r'); # change # episodes
 #f = open("qLearning_eps100000_RandomX2.txt",'r'); # change # episodes
 ghostType = ['Random','Random'];
 
@@ -75,13 +75,12 @@ num_ghosts = 2;
 win_count = 0
 winning_steps = []
 
-for s in range(1): # run 50 simulations
+for s in range(100): # run 50 simulations
     print(s)
 
     ghost_x = all_ghost_x[s];
     ghost_y = all_ghost_y[s];
-    ghost_x = [2,3];
-    ghost_y = [2,3];
+
     game = Game();
     steps_to_win = 0
     game.updateState(pacman_x, pacman_y, ghost_x, ghost_y, num_ghosts, ghostType) # update internal grid
@@ -89,7 +88,7 @@ for s in range(1): # run 50 simulations
     ## Start game
     while not game.ended:
         game.update(); # update graphics
-        time.sleep(1);
+        #time.sleep(1);
         # Get state (0 to numStates-1) from pacman and ghost coordinates
         state = coord2state(game.pacman_x, game.pacman_y, game.ghost_x, game.ghost_y, num_ghosts, grid_len);
         # My policy[state] outputs 0 to 3, that's why I add 1, because Steven's actions go 1 to 4
@@ -108,7 +107,7 @@ for s in range(1): # run 50 simulations
         winning_steps.append(steps_to_win) # does not add to list if game is lost
 
 print('Total # of wins: ', win_count)
-#print('Average # steps to win: ', np.mean(winning_steps))
+print('Average # steps to win: ', np.mean(winning_steps))
 pygame.display.quit()
 pygame.quit()
 sys.exit()
