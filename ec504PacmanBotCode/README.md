@@ -7,10 +7,10 @@ The three difficulty levels are separated into three separate folders:
 3. Hard level: Wall+Muliple
 
 In each these folders, the algorithms are written in the following files:<br />
-*heuristic_policy.py (only for Easy Level)
-*policyIteration.py
-*valueIteration.py
-*qLearning.py
+* heuristic_policy.py (only for Easy Level)
+* policyIteration.py
+* valueIteration.py
+* qLearning.py
 
 Each of these files computes the policy and saves them to a text file.<br />
 These text files are already in the folder for immediate use.<br />
